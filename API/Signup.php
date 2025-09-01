@@ -1,10 +1,14 @@
 <?php
+	require '../vendor/autoload.php';
+
+	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+	$dotenv->load();
 
     $inData = getRequestInfo();
 
     // database info
-    $username = "testwebapp";
-    $password = "password";
+    $username = $_ENV['DB_USERNAME'];
+    $password = $_ENV['DB_PASSWORD'];
     $database = "testingLAMP";
 
     // User info
