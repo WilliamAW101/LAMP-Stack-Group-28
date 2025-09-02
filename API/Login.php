@@ -1,5 +1,6 @@
 <?php
 	require '../vendor/autoload.php';
+	require_once 'json.php';
 
 	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 	$dotenv->load();
@@ -17,57 +18,18 @@
     $lastName = "";
 
     $conn = new mysqli("localhost", $username, $password, $database); 	
-    if( $conn->connect_error )
-	{
+    if( $conn->connect_error ) {
 		returnWithError( $conn->connect_error );
 	}
-    else
-	{
+    else {
         // prevents SQL injection
 		$stmt = $conn->prepare("SELECT ID,first_name,last_name FROM Users WHERE login=? AND password =?");
 		$stmt->bind_param("ss", $inData["login"], $inData["password"]);
 		$stmt->execute();
 		$result = $stmt->get_result();
-
-		if( $row = $result->fetch_assoc()  )
-		{
-            $stmt = $conn->prepare("SELECT first_name, last_name, email, phone FROM Contacts WHERE user_id = ?");
-		    $stmt->bind_param("i", $row['ID']);
-		    $stmt->execute();
-		    $result = $stmt->get_result();
-            $row = $result->fetch_assoc();
-			returnWithInfo( $row['first_name'], $row['last_name'], $row['email'], $row['phone'] );
-		}
-		else
-		{
-			returnWithError("No Records Found");
-		}
-
+		$row = $result->fetch_assoc();
+		returnWithContactInfo( $result, $conn, $row['ID'] );
 		$stmt->close();
 		$conn->close();
-	}
-
-    // function will receive the JSON POST request
-    function getRequestInfo()
-	{
-		return json_decode(file_get_contents('php://input'), true);
-	}
-
-    function returnWithError( $err )
-	{
-		$retValue = '{"id":0,"firstName":"","lastName":"","error":"' . $err . '"}';
-		sendResultInfoAsJson( $retValue );
-	}
-
-    function sendResultInfoAsJson( $obj )
-	{
-		header('Content-type: application/json');
-		echo $obj;
-	}
-
-    function returnWithInfo( $firstName, $lastName, $email, $phone )
-	{
-		$retValue = '{"firstName":"' . $firstName . '","lastName":"' . $lastName . '","email":"' . $email . '","phone":"' . $phone . '","error":""}';
-		sendResultInfoAsJson( $retValue );
 	}
 ?>
