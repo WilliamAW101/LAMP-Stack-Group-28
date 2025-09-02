@@ -10,3 +10,8 @@ Roles:
 Discord: 
 https://discord.gg/BEa6PbpN
 
+Digital Ocean 
+- IP Address:  138.197.106.181
+- PW:          so116070Suki
+
+
