@@ -1,5 +1,5 @@
 <?php
-	require '../vendor/autoload.php';
+    require '../vendor/autoload.php';
 	require_once 'json.php';
 
 	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
@@ -10,10 +10,10 @@
     // database info
     $username = $_ENV['DB_USERNAME'];
     $password = $_ENV['DB_PASSWORD'];
-    $hostname = $_ENV['DB'];
+    $database = $_ENV['DB'];
 
     #Server Info
-    $servername = $_ENV['HOST_NAME'];
+    $hostname = $_ENV['HOST_NAME'];
 
     // User info
     $userLogin = $inData["login"];
@@ -24,33 +24,29 @@
     $contactEmail = $inData["email"];
     $contactPhone = $inData["phone"];
 
-    // variables to store our query information of the user logging in
-    $contact_id = 0;
-    $firstName = "";
-    $lastName = "";
-
     $conn = new mysqli($hostname, $username, $password, $database); 	
     if( $conn->connect_error ) {
 		returnWithError( $conn->connect_error );
-	}
-    else {
+	} else {
+        
         // prevents SQL injection
-		$stmt = $conn->prepare("INSERT INTO Users (first_name, last_name, login, password) VALUES (?, ?, ?, ?)");
-		$stmt->bind_param("ssss", $userFirstName, $userLastName, $userLogin, $userPassword);
+		$stmt = $conn->prepare("SELECT ID,first_name,last_name FROM Users WHERE login=? AND password =?");
+		$stmt->bind_param("ss", $inData["login"], $inData["password"]);
 		$stmt->execute();
 		$result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        $ID = $row['ID'];
 
-        // get the latest user_id
-        $userID = $stmt->insert_id;
         $stmt->close();
-        
         // if it is greater than zero, we know it was successfull to add the user
-        if($userID > 0) {   
-			addContact( $userFirstName, $userLastName, $contactPhone, $contactEmail, $userID, $conn );
+        if($ID > 0) {   
+			addContact( $userFirstName, $userLastName, $contactPhone, $contactEmail, $ID, $conn );
 		    $conn->close();
-		} else {
-			returnWithError("FAILED TO ADD USER");
+		}
+		else {
+			returnWithError("FAILED TO ADD CONTACT");
+            $stmt->close();
 		    $conn->close();
         }
-	}
+    }
 ?>
