@@ -8,16 +8,19 @@
     $inData = getRequestInfo();
 
     // database info
-    $username = $_ENV["DB_USERNAME"];
-    $password = $_ENV["DB_PASSWORD"];
-    $database = "testingLAMP";
+    $username = $_ENV['DB_USERNAME'];
+    $password = $_ENV['DB_PASSWORD'];
+    $database = $_ENV['DB'];
+
+    #Server Info
+    $hostname = $_ENV['HOST_NAME'];
 
     // variables to store our query information of the user logging in
     $contact_id = 0;
     $firstName = "";
     $lastName = "";
 
-    $conn = new mysqli("localhost", $username, $password, $database); 	
+    $conn = new mysqli($hostname, $username, $password, $database); 	
     if( $conn->connect_error ) {
 		returnWithError( $conn->connect_error );
 	}

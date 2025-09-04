@@ -10,7 +10,10 @@
     // database info
     $username = $_ENV['DB_USERNAME'];
     $password = $_ENV['DB_PASSWORD'];
-    $database = "testingLAMP";
+    $hostname = $_ENV['DB'];
+
+    #Server Info
+    $servername = $_ENV['HOST_NAME'];
 
     // User info
     $userLogin = $inData["login"];
@@ -26,7 +29,7 @@
     $firstName = "";
     $lastName = "";
 
-    $conn = new mysqli("localhost", $username, $password, $database); 	
+    $conn = new mysqli($hostname, $username, $password, $database); 	
     if( $conn->connect_error ) {
 		returnWithError( $conn->connect_error );
 	}

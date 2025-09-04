@@ -10,7 +10,10 @@
     // database info
     $username = $_ENV['DB_USERNAME'];
     $password = $_ENV['DB_PASSWORD'];
-    $database = "testingLAMP";
+    $database = $_ENV['DB'];
+
+    #Server Info
+    $hostname = $_ENV['HOST_NAME'];
 
     // User info
     $userLogin = $inData["login"];
@@ -21,7 +24,7 @@
     $contactEmail = $inData["email"];
     $contactPhone = $inData["phone"];
 
-    $conn = new mysqli("localhost", $username, $password, $database); 	
+    $conn = new mysqli($hostname, $username, $password, $database); 	
     if( $conn->connect_error ) {
 		returnWithError( $conn->connect_error );
 	} else {
