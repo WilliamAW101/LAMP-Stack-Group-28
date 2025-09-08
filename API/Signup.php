@@ -29,7 +29,7 @@
     $firstName = "";
     $lastName = "";
 
-    $conn = new mysqli($hostname, $username, $password, $database); 	
+    $conn = new mysqli($servername, $username, $password, $hostname); 	
     if( $conn->connect_error ) {
 		returnWithError( $conn->connect_error );
 	}
