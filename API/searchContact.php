@@ -18,14 +18,13 @@
     // User info
     $jwt = $inData["token"];
     $search = "%" . $inData["search"] . "%";
-    var_dump($search);
 
     $conn = new mysqli($hostname, $username, $password, $database); 	
     if( $conn->connect_error ) {
 		returnWithError( $conn->connect_error );
 	} else {
-        $user_ID = validateJWT($jwt, $_ENV['JWT_SECRET'], $hostname); // get user ID from JWT
-        var_dump("Users ID: " . $user_ID);
+        $user_ID = validateJWT($jwt, $_ENV['JWT_SECRET'], $hostname);
+
         // if it is greater than zero, we know it was successfull to add the user
         if($user_ID != null) {
             $ID = $user_ID;

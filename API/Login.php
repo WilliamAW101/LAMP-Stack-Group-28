@@ -42,15 +42,9 @@
 		$result = $stmt->get_result();
 		$row = $result->fetch_assoc();
 
-        if (password_verify($inData["password"], $row["password"])) {
-          //  var_dump("Password is valid!");
-            $jwt = generateJWT($row['ID'], $_ENV['JWT_SECRET'], $hostname); 
-            //sendResultInfoAsJson(json_encode(["token" => $jwt]));
-            returnUserInfo( $row["first_name"], $row["last_name"], $row["ID"], json_encode($jwt));
-		    $stmt->close();
-		    $conn->close();
-        } else {
-            returnWithError("Invalid Username or Password");
-        }
+        $jwt = generateJWT($row['ID'], $_ENV['JWT_SECRET'], $hostname); 
+        sendResultInfoAsJson(json_encode(["token" => $jwt]));
+		$stmt->close();
+		$conn->close();
 	}
 ?>
