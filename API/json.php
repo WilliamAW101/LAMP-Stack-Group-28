@@ -1,5 +1,7 @@
 <?php
     // Utility functions for JSON handling
+	require_once('../vendor/autoload.php');
+	use \Firebase\JWT\JWT; 
     
     function getRequestInfo() {
 		return json_decode(file_get_contents('php://input'), true);
@@ -20,12 +22,12 @@
 		sendResultInfoAsJson( $retValue );
 	}
 
-    function returnWithContactInfo( $result, $conn, $userID ) {
+    function returnWithContactInfo( $result, $conn, $userID, $search ) {
         $searchResults = "";
 	    $searchCount = 0;
         
-        $stmt = $conn->prepare("SELECT first_name, last_name, email, phone FROM Contacts WHERE user_id = ?");
-		$stmt->bind_param("i", $userID);
+        $stmt = $conn->prepare("SELECT first_name, last_name, email, phone FROM Contacts WHERE user_id = ? AND (first_name LIKE ? OR last_name LIKE ?)");
+		$stmt->bind_param("iss", $userID, $search, $search);
 		$stmt->execute();
 		$result = $stmt->get_result();
 
@@ -64,4 +66,30 @@
 		}
         $stmt->close();
     }
+
+	function generateJWT($userID, $key, $hostname) {
+		// creating payload
+		$payload = array(
+			'iss' => $hostname,
+			"exp" => time() + (60 * 60), // expiration date of 1 hour
+			"userID" => $userID
+		);
+		$jwt = JWT::encode($payload, $key, 'HS256');
+
+		return $jwt;
+	}
+
+	function validateJWT($jwt, $key, $hostname) {
+		try {
+			$decoded = JWT::decode($jwt, new \Firebase\JWT\Key($key, 'HS256'));
+			// verify the issuer
+			if ( ($decoded->iss != $hostname) || ($decoded->exp < time()) ) {
+				echo("Invalid token issuer or expired token");
+				return null;
+			}
+			return $decoded->userID;
+		} catch (Exception $e) {
+			return null;
+		}
+	}
 ?>

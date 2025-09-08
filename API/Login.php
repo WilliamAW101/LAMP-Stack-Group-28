@@ -31,7 +31,9 @@
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$row = $result->fetch_assoc();
-		returnWithContactInfo( $result, $conn, $row['ID'] );
+
+        $jwt = generateJWT($row['ID'], $_ENV['JWT_SECRET'], $hostname); 
+        sendResultInfoAsJson(json_encode(["token" => $jwt]));
 		$stmt->close();
 		$conn->close();
 	}

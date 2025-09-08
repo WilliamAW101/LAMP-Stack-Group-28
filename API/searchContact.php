@@ -17,10 +17,7 @@
 
     // User info
     $jwt = $inData["token"];
-    $userFirstName = $inData["first_name"];
-    $userLastName = $inData["last_name"];
-    $contactEmail = $inData["email"];
-    $contactPhone = $inData["phone"];
+    $search = "%" . $inData["search"] . "%";
 
     $conn = new mysqli($hostname, $username, $password, $database); 	
     if( $conn->connect_error ) {
@@ -31,11 +28,11 @@
         // if it is greater than zero, we know it was successfull to add the user
         if($user_ID != null) {
             $ID = $user_ID;
-			addContact( $userFirstName, $userLastName, $contactPhone, $contactEmail, $ID, $conn );
+            returnWithContactInfo( $search, $conn, $ID, $search );
 		    $conn->close();
 		}
 		else {
-			returnWithError("FAILED TO ADD CONTACT");
+			returnWithError("FAILED TO SEARCH CONTACTS");
             $stmt->close();
 		    $conn->close();
         }
