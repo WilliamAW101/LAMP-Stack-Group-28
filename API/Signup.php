@@ -34,12 +34,12 @@
 		returnWithError( $conn->connect_error );
 	}
     else {
+        $userPassword = password_hash($userPassword, PASSWORD_DEFAULT); // hash password 
         // prevents SQL injection
 		$stmt = $conn->prepare("INSERT INTO Users (first_name, last_name, login, password) VALUES (?, ?, ?, ?)");
 		$stmt->bind_param("ssss", $userFirstName, $userLastName, $userLogin, $userPassword);
 		$stmt->execute();
 		$result = $stmt->get_result();
-
         // get the latest user_id
         $userID = $stmt->insert_id;
         $stmt->close();
