@@ -58,7 +58,7 @@
 
         if($stmt->affected_rows > 0)
 		{
-			returnWithInfo($userFirstName, $userLastName, $userID);
+			sendResultInfoAsJson("OK");
 		}
 		else
 		{

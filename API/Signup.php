@@ -21,9 +21,6 @@
     $userFirstName = $inData["first_name"];
     $userLastName = $inData["last_name"];
 
-    $contactEmail = $inData["email"];
-    $contactPhone = $inData["phone"];
-
     // variables to store our query information of the user logging in
     $contact_id = 0;
     $firstName = "";
@@ -46,8 +43,7 @@
         
         // if it is greater than zero, we know it was successfull to add the user
         if($userID > 0) {   
-			addContact( $userFirstName, $userLastName, $contactPhone, $contactEmail, $userID, $conn );
-		    $conn->close();
+			sendResultInfoAsJson("OK");
 		} else {
 			returnWithError("FAILED TO ADD USER");
 		    $conn->close();
