@@ -26,13 +26,19 @@
 	}
     else {
         // prevents SQL injection
-		$stmt = $conn->prepare("SELECT ID,first_name,last_name FROM Users WHERE login=? AND password =?");
-		$stmt->bind_param("ss", $inData["login"], $inData["password"]);
+		$stmt = $conn->prepare("SELECT ID,password FROM Users WHERE login=?");
+		$stmt->bind_param("s", $inData["login"]);
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$row = $result->fetch_assoc();
-		returnWithContactInfo( $result, $conn, $row['ID'] );
-		$stmt->close();
-		$conn->close();
+        
+        if (password_verify($inData["password"], $row["password"])) {
+            $jwt = generateJWT($row['ID'], $_ENV['JWT_SECRET'], $hostname); 
+            sendResultInfoAsJson(json_encode(["token" => $jwt]));
+		    $stmt->close();
+		    $conn->close();
+        } else {
+            returnWithError("Invalid Username or Password");
+        }
 	}
 ?>

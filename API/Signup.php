@@ -21,33 +21,29 @@
     $userFirstName = $inData["first_name"];
     $userLastName = $inData["last_name"];
 
-    $contactEmail = $inData["email"];
-    $contactPhone = $inData["phone"];
-
     // variables to store our query information of the user logging in
     $contact_id = 0;
     $firstName = "";
     $lastName = "";
 
-    $conn = new mysqli($hostname, $username, $password, $database); 	
+    $conn = new mysqli($servername, $username, $password, $hostname); 	
     if( $conn->connect_error ) {
 		returnWithError( $conn->connect_error );
 	}
     else {
+        $userPassword = password_hash($userPassword, PASSWORD_DEFAULT); // hash password 
         // prevents SQL injection
 		$stmt = $conn->prepare("INSERT INTO Users (first_name, last_name, login, password) VALUES (?, ?, ?, ?)");
 		$stmt->bind_param("ssss", $userFirstName, $userLastName, $userLogin, $userPassword);
 		$stmt->execute();
 		$result = $stmt->get_result();
-
         // get the latest user_id
         $userID = $stmt->insert_id;
         $stmt->close();
         
         // if it is greater than zero, we know it was successfull to add the user
         if($userID > 0) {   
-			addContact( $userFirstName, $userLastName, $contactPhone, $contactEmail, $userID, $conn );
-		    $conn->close();
+			sendResultInfoAsJson("OK");
 		} else {
 			returnWithError("FAILED TO ADD USER");
 		    $conn->close();
