@@ -31,6 +31,22 @@
 		returnWithError( $conn->connect_error );
 	}
     else {
+
+        // Check if login already exists
+        $checkStmt = $conn->prepare("SELECT ID FROM Users WHERE login = ?");
+        $checkStmt->bind_param("s", $userLogin);
+        $checkStmt->execute();
+        $checkStmt->store_result();
+
+        if ($checkStmt->num_rows > 0) {
+            // Username already taken
+            returnWithError("Login name already exists. Please choose another.");
+            $checkStmt->close();
+            $conn->close();
+            exit();
+        }
+        $checkStmt->close();
+
         $userPassword = password_hash($userPassword, PASSWORD_DEFAULT); // hash password 
         // prevents SQL injection
 		$stmt = $conn->prepare("INSERT INTO Users (first_name, last_name, login, password) VALUES (?, ?, ?, ?)");
@@ -44,6 +60,7 @@
         // if it is greater than zero, we know it was successfull to add the user
         if($userID > 0) {   
 			sendResultInfoAsJson("OK");
+		    $conn->close();
 		} else {
 			returnWithError("FAILED TO ADD USER");
 		    $conn->close();
