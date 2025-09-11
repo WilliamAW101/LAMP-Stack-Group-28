@@ -2,6 +2,11 @@
 	require '../vendor/autoload.php';
 	require_once 'json.php';
 
+    if ($_SERVER['REQUEST_METHOD'] != 'GET') {
+        http_response_code(405); // Method Not Allowed
+        exit();
+    }
+
 	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 	$dotenv->load();
 
@@ -15,22 +20,7 @@
     #Server Info
     $hostname = $_ENV['HOST_NAME'];
 
-    // variables to store our query information of the user logging in
-    $contact_id = 0;
-    $firstName = "";
-    $lastName = "";
-
-    $conn = new mysqli($hostname, $username, $password, $database);
-
-    // Debugging code to see if we can connect and query the database
-//     $result = $conn->query("SELECT * FROM Users where login='john_Bob'");
-//     $rows = [];
-//     while ($row = $result->fetch_assoc()) {
-//         $rows[] = $row;
-//     }
-// sendResultInfoAsJson(json_encode($rows));
-
-
+    $conn = new mysqli($hostname, $username, $password, $database); 	
     if( $conn->connect_error ) {
 		returnWithError( $conn->connect_error );
 	}
@@ -48,6 +38,7 @@
 		    $stmt->close();
 		    $conn->close();
         } else {
+            http_response_code(400);
             returnWithError("Invalid Username or Password");
         }
 	}

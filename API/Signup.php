@@ -2,6 +2,12 @@
 	require '../vendor/autoload.php';
 	require_once 'json.php';
 
+    if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+        http_response_code(405); // Method Not Allowed
+        exit();
+    }
+
+    // for environment variables
 	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 	$dotenv->load();
 
@@ -21,11 +27,6 @@
     $userFirstName = $inData["first_name"];
     $userLastName = $inData["last_name"];
 
-    // variables to store our query information of the user logging in
-    $contact_id = 0;
-    $firstName = "";
-    $lastName = "";
-
     $conn = new mysqli($servername, $username, $password, $hostname); 	
     if( $conn->connect_error ) {
 		returnWithError( $conn->connect_error );
@@ -35,18 +36,18 @@
         // prevents SQL injection
 		$stmt = $conn->prepare("INSERT INTO Users (first_name, last_name, login, password) VALUES (?, ?, ?, ?)");
 		$stmt->bind_param("ssss", $userFirstName, $userLastName, $userLogin, $userPassword);
-		$stmt->execute();
-		$result = $stmt->get_result();
-        // get the latest user_id
-        $userID = $stmt->insert_id;
-        $stmt->close();
-        
-        // if it is greater than zero, we know it was successfull to add the user
-        if($userID > 0) {   
-			sendResultInfoAsJson("OK");
-		    $conn->close();
+
+        if($stmt->execute()) {
+            http_response_code(201);
+            // get the latest user_id
+            $userID = $stmt->insert_id;
+            returnWithInfo( $userFirstName, $userLastName, $userID );
+            $stmt->close();
+            $conn->close();
 		} else {
-			returnWithError("FAILED TO ADD USER");
+            http_response_code(400);
+            returnWithError("User Already Exists"); // yet to implement in database
+            $stmt->close();
 		    $conn->close();
         }
 	}

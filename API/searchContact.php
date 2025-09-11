@@ -2,6 +2,11 @@
     require '../vendor/autoload.php';
 	require_once 'json.php';
 
+    if ($_SERVER['REQUEST_METHOD'] != 'GET') {
+        http_response_code(405); // Method Not Allowed
+        exit();
+    }
+
 	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 	$dotenv->load();
 
