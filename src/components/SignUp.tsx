@@ -1,6 +1,5 @@
 "use client"
 
-
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -21,6 +20,9 @@ import ColorModeSelect from '../theme/ColorModeSelect';
 import GoogleIcon from "../components/icons/GoogleIcon"
 import FacebookIcon from "../components/icons/FacebookIcon"
 import SitemarkIcon from "../components/icons/SitemarkIcon"
+import { useToast } from '@/context/toast';
+import { useRouter } from 'next/navigation';
+import { useUser } from '@/context/user/UserContext';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -69,13 +71,22 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [nameError, setNameError] = React.useState(false);
-  const [nameErrorMessage, setNameErrorMessage] = React.useState('');
+  const [firstnameError, setFirstNameError] = React.useState(false);
+  const [lastnameError, setLastNameError] = React.useState(false);
+  const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
+  const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
+
+  const toast = useToast()
+  const router = useRouter()
+  const { setUser } = useUser();
+
 
   const validateInputs = () => {
     const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
-    const name = document.getElementById('name') as HTMLInputElement;
+    const firstname = document.getElementById('firstname') as HTMLInputElement;
+    const lastname = document.getElementById('lastname') as HTMLInputElement;
+
 
     let isValid = true;
 
@@ -97,31 +108,68 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       setPasswordErrorMessage('');
     }
 
-    if (!name.value || name.value.length < 1) {
-      setNameError(true);
-      setNameErrorMessage('Name is required.');
+    if (!firstname.value || firstname.value.length < 1) {
+      setFirstNameError(true);
+      setFirstNameErrorMessage('Name is required.');
       isValid = false;
     } else {
-      setNameError(false);
-      setNameErrorMessage('');
+      setFirstNameError(false);
+      setFirstNameErrorMessage('');
+    }
+
+    if (!lastname.value || lastname.value.length < 1) {
+      setLastNameError(true);
+      setLastNameErrorMessage('Name is required.');
+      isValid = false;
+    } else {
+      setLastNameError(false);
+      setLastNameErrorMessage('');
     }
 
     return isValid;
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (nameError || emailError || passwordError) {
-      event.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // prevent default form submission
+
+    if (firstnameError || lastnameError || emailError || passwordError) {
       return;
     }
+
     const data = new FormData(event.currentTarget);
-    console.log({
-      name: data.get('name'),
-      lastName: data.get('lastName'),
-      email: data.get('email'),
+
+    // Convert FormData to JSON object
+    const jsonData = {
+      login: data.get('email'),
       password: data.get('password'),
-    });
+      first_name: data.get('firstname'),
+      last_name: data.get('lastname'),
+      // email: data.get('email'),
+      // phone: data.get('phone'),
+    };
+
+    try {
+      const response = await fetch('http://localhost:8000/Signup.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // send JSON
+        },
+        body: JSON.stringify(jsonData),
+      });
+
+      const result = await response.json(); // assuming PHP returns JSON
+      toast.success("Create account successfully");
+
+      setUser({
+        first_name: result.firstname,
+        last_name: result.lastname,
+      });
+      router.push("/")
+    } catch (error) {
+      console.error('Error sending data:', error);
+    }
   };
+
 
   return (
     <AppTheme {...props}>
@@ -129,7 +177,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
       <SignUpContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
-          {/* <SitemarkIcon /> */}
+          <SitemarkIcon />
           <Typography
             component="h1"
             variant="h4"
@@ -143,17 +191,31 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
             <FormControl>
-              <FormLabel htmlFor="name">Full name</FormLabel>
+              <FormLabel htmlFor="first name">First name</FormLabel>
               <TextField
-                autoComplete="name"
-                name="name"
+                autoComplete="firstname"
+                name="firstname"
                 required
                 fullWidth
-                id="name"
-                placeholder="Jon Snow"
-                error={nameError}
-                helperText={nameErrorMessage}
-                color={nameError ? 'error' : 'primary'}
+                id="firstname"
+                placeholder="Jon"
+                error={firstnameError}
+                helperText={firstNameErrorMessage}
+                color={firstnameError ? 'error' : 'primary'}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="name">Last name</FormLabel>
+              <TextField
+                autoComplete="lastname"
+                name="lastname"
+                required
+                fullWidth
+                id="lastname"
+                placeholder="Snow"
+                error={lastnameError}
+                helperText={lastNameErrorMessage}
+                color={lastnameError ? 'error' : 'primary'}
               />
             </FormControl>
             <FormControl>

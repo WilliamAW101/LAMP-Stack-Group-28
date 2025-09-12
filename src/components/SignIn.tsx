@@ -21,6 +21,10 @@ import ColorModeSelect from '../theme/ColorModeSelect';
 import GoogleIcon from "../components/icons/GoogleIcon"
 import FacebookIcon from "../components/icons/FacebookIcon"
 import SitemarkIcon from "../components/icons/SitemarkIcon"
+import { sendRequest } from '@/context/api';
+import { useToast } from '@/context/toast';
+import { useUser } from '@/context/user/UserContext';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -73,6 +77,10 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
 
+  const { setUser } = useUser();
+  const toast = useToast()
+  const router = useRouter()
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -81,17 +89,39 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     setOpen(false);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault(); // prevent default form submission
+
     if (emailError || passwordError) {
-      event.preventDefault();
       return;
     }
+
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
+
+    // Convert FormData to JSON object
+    const jsonData = {
+      login: data.get('email'),
       password: data.get('password'),
-    });
+    };
+
+    try {
+      const response = await fetch('http://localhost:8000/Login.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json', // send JSON
+        },
+        body: JSON.stringify(jsonData),
+      });
+
+      const result = await response.json(); // assuming PHP returns JSON
+      toast.success("Login successfully");
+
+      router.push("/")
+    } catch (error) {
+      console.error('Error sending data:', error);
+    }
   };
+
 
   const validateInputs = () => {
     const email = document.getElementById('email') as HTMLInputElement;
@@ -119,6 +149,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
     return isValid;
   };
+
 
 
 
