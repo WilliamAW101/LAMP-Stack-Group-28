@@ -35,25 +35,18 @@
 		returnWithError( $conn->connect_error );
 	}
     else {
-        var_dump($inData["login"]);
-        var_dump($inData["password"]);
         // prevents SQL injection
-		$stmt = $conn->prepare("SELECT ID,password FROM Users WHERE login=?");
-        //var_dump($stmt);
+		$stmt = $conn->prepare("SELECT ID,password,first_name,last_name FROM Users WHERE login=?");
 		$stmt->bind_param("s", $inData["login"]);
 		$stmt->execute();
-        //var_dump($stmt);
 		$result = $stmt->get_result();
-        //var_dump($result);
 		$row = $result->fetch_assoc();
-        //var_dump($row["password"]);
-        //var_dump($inData["password"]);
-        //var_dump($_ENV['JWT_SECRET']);
-        //var_dump($row["ID"]);
+
         if (password_verify($inData["password"], $row["password"])) {
           //  var_dump("Password is valid!");
             $jwt = generateJWT($row['ID'], $_ENV['JWT_SECRET'], $hostname); 
-            sendResultInfoAsJson(json_encode(["token" => $jwt]));
+            //sendResultInfoAsJson(json_encode(["token" => $jwt]));
+            returnUserInfo( $row["first_name"], $row["last_name"], $row["ID"], json_encode($jwt));
 		    $stmt->close();
 		    $conn->close();
         } else {
