@@ -30,14 +30,14 @@
 	} else {
         $user_ID = validateJWT($jwt, $_ENV['JWT_SECRET'], $hostname);
 
-        // if it is greater than zero, we know it was successfull to add the user
         if($user_ID != null) {
             $ID = $user_ID;
-            returnWithContactInfo( $search, $conn, $ID, $search );
+            returnWithContactInfo( $conn, $ID, $search );
 		    $conn->close();
 		}
 		else {
-			returnWithError("FAILED TO SEARCH CONTACTS");
+            http_response_code(401);
+			returnWithError("Invalid or expired token");
             $stmt->close();
 		    $conn->close();
         }

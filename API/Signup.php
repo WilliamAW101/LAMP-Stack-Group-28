@@ -27,6 +27,25 @@
     $userFirstName = $inData["first_name"];
     $userLastName = $inData["last_name"];
 
+    // Before continuing, make sure everything is filled in
+    if (isEmpty($userLogin)) {
+        http_response_code(400);
+        returnWithError("Invalid Username");
+        exit(1);
+    } else if (isEmpty($userPassword)) {
+        http_response_code(400);
+        returnWithError("Invalid Password");
+        exit(1);
+    } else if (isEmpty($userFirstName)) {
+        http_response_code(400);
+        returnWithError("Invalid FirstName");
+        exit(1);
+    } else if (isEmpty($userLastName)) {
+        http_response_code(400);
+        returnWithError("Invalid LastName");
+        exit(1);
+    }
+
     $conn = new mysqli($servername, $username, $password, $hostname); 	
     if( $conn->connect_error ) {
 		returnWithError( $conn->connect_error );
@@ -36,17 +55,15 @@
         // prevents SQL injection
 		$stmt = $conn->prepare("INSERT INTO Users (first_name, last_name, login, password) VALUES (?, ?, ?, ?)");
 		$stmt->bind_param("ssss", $userFirstName, $userLastName, $userLogin, $userPassword);
-
+        
+        // Database should tell us if there is a duplicate username that exists, we'll pass it to frontend
         if($stmt->execute()) {
             http_response_code(201);
-            // get the latest user_id
-            $userID = $stmt->insert_id;
-            returnWithInfo( $userFirstName, $userLastName, $userID );
             $stmt->close();
             $conn->close();
 		} else {
             http_response_code(400);
-            returnWithError("User Already Exists"); // yet to implement in database
+            returnWithError($stmt->error);
             $stmt->close();
 		    $conn->close();
         }

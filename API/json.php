@@ -22,7 +22,7 @@
 		sendResultInfoAsJson( $retValue );
 	}
 
-    function returnWithContactInfo( $result, $conn, $userID, $search ) {
+    function returnWithContactInfo( $conn, $userID, $search ) {
         $searchResults = "";
 	    $searchCount = 0;
         
@@ -63,7 +63,7 @@
 		}
 		else
 		{
-			returnWithError("FAILED TO ADD CONTACT");
+			returnWithError("Failed to add contact: " + $stmt->error);
 		}
         $stmt->close();
     }
@@ -92,5 +92,9 @@
 		} catch (Exception $e) {
 			return null;
 		}
+	}
+
+	function isEmpty($val) {
+    	return !isset($val) || trim($val) === '';
 	}
 ?>
