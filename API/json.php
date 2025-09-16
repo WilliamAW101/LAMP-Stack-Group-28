@@ -22,14 +22,23 @@
 		sendResultInfoAsJson( $retValue );
 	}
 
+	function returnUserInfo( $firstName, $lastName, $id, $token ) {
+		$retValue = '{"id":' . $id . ',"firstName":"' . $firstName . '","lastName":"' . $lastName . '","error":"","token":' . $token . '}';
+		sendResultInfoAsJson( $retValue );
+	}
+
     function returnWithContactInfo( $result, $conn, $userID, $search ) {
+		var_dump("Result: ".$result);
+		var_dump("User ID: ".$userID);
+		var_dump("Search: ".$search);
         $searchResults = "";
 	    $searchCount = 0;
-        
-        $stmt = $conn->prepare("SELECT first_name, last_name, email, phone FROM Contacts WHERE user_id = ? AND (first_name LIKE ? OR last_name LIKE ?)");
+    
+        $stmt = $conn->prepare("SELECT contact_id, first_name, last_name, email, phone FROM Contacts WHERE user_id = ? AND (first_name LIKE ? OR last_name LIKE ?)");
 		$stmt->bind_param("iss", $userID, $search, $search);
 		$stmt->execute();
 		$result = $stmt->get_result();
+		//var_dump("Query Result: ".$result);
 
         while ($row = $result->fetch_assoc()) {
 
@@ -38,7 +47,7 @@
 				$searchResults .= ",";
 			}
 			$searchCount++;
-			$searchResults .= '{"firstName":"' . $row['first_name'] . '","lastName":"' . $row['last_name'] . '","email":"' . $row['email'] . '","phone":"' . $row['phone'] . '","error":""}';
+			$searchResults .= '{"contact_id":"' . $row['contact_id'] . '","firstName":"' . $row['first_name'] . '","lastName":"' . $row['last_name'] . '","email":"' . $row['email'] . '","phone":"' . $row['phone'] . '","error":""}';
 		}
 
 		if ($searchCount == 0)
