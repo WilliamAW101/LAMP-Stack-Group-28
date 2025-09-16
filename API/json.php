@@ -22,6 +22,11 @@
 		sendResultInfoAsJson( $retValue );
 	}
 
+	function returnUserInfo( $firstName, $lastName, $id, $token ) {
+		$retValue = '{"id":' . $id . ',"firstName":"' . $firstName . '","lastName":"' . $lastName . '","error":"","token":' . $token . '}';
+		sendResultInfoAsJson( $retValue );
+	}
+
     function returnWithContactInfo( $result, $conn, $userID, $search ) {
 		var_dump("Result: ".$result);
 		var_dump("User ID: ".$userID);
