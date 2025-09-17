@@ -2,6 +2,11 @@
     require '../vendor/autoload.php';
 	require_once 'json.php';
 
+    if ($_SERVER['REQUEST_METHOD'] != 'GET') {
+        http_response_code(405); // Method Not Allowed
+        exit();
+    }
+
 	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 	$dotenv->load();
 
@@ -18,22 +23,21 @@
     // User info
     $jwt = $inData["token"];
     $search = "%" . $inData["search"] . "%";
-    var_dump($search);
 
     $conn = new mysqli($hostname, $username, $password, $database); 	
     if( $conn->connect_error ) {
 		returnWithError( $conn->connect_error );
 	} else {
-        $user_ID = validateJWT($jwt, $_ENV['JWT_SECRET'], $hostname); // get user ID from JWT
-        var_dump("Users ID: " . $user_ID);
-        // if it is greater than zero, we know it was successfull to add the user
+        $user_ID = validateJWT($jwt, $_ENV['JWT_SECRET'], $hostname);
+
         if($user_ID != null) {
             $ID = $user_ID;
-            returnWithContactInfo( $search, $conn, $ID, $search );
+            returnWithContactInfo( $conn, $ID, $search );
 		    $conn->close();
 		}
 		else {
-			returnWithError("FAILED TO SEARCH CONTACTS");
+            http_response_code(401);
+			returnWithError("Invalid or expired token");
             $stmt->close();
 		    $conn->close();
         }

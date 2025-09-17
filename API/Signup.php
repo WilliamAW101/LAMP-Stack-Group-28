@@ -2,6 +2,12 @@
 	require '../vendor/autoload.php';
 	require_once 'json.php';
 
+    if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+        http_response_code(405); // Method Not Allowed
+        exit();
+    }
+
+    // for environment variables
 	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 	$dotenv->load();
 
@@ -21,48 +27,44 @@
     $userFirstName = $inData["first_name"];
     $userLastName = $inData["last_name"];
 
-    // variables to store our query information of the user logging in
-    $contact_id = 0;
-    $firstName = "";
-    $lastName = "";
+    // Before continuing, make sure everything is filled in
+    if (isEmpty($userLogin)) {
+        http_response_code(400);
+        returnWithError("Invalid Username");
+        exit(1);
+    } else if (isEmpty($userPassword)) {
+        http_response_code(400);
+        returnWithError("Invalid Password");
+        exit(1);
+    } else if (isEmpty($userFirstName)) {
+        http_response_code(400);
+        returnWithError("Invalid FirstName");
+        exit(1);
+    } else if (isEmpty($userLastName)) {
+        http_response_code(400);
+        returnWithError("Invalid LastName");
+        exit(1);
+    }
 
     $conn = new mysqli($servername, $username, $password, $hostname); 	
     if( $conn->connect_error ) {
 		returnWithError( $conn->connect_error );
 	}
     else {
-
-        // Check if login already exists
-        $checkStmt = $conn->prepare("SELECT ID FROM Users WHERE login = ?");
-        $checkStmt->bind_param("s", $userLogin);
-        $checkStmt->execute();
-        $checkStmt->store_result();
-
-        if ($checkStmt->num_rows > 0) {
-            // Username already taken
-            returnWithError("Login name already exists. Please choose another.");
-            $checkStmt->close();
-            $conn->close();
-            exit();
-        }
-        $checkStmt->close();
-
         $userPassword = password_hash($userPassword, PASSWORD_DEFAULT); // hash password 
         // prevents SQL injection
 		$stmt = $conn->prepare("INSERT INTO Users (first_name, last_name, login, password) VALUES (?, ?, ?, ?)");
 		$stmt->bind_param("ssss", $userFirstName, $userLastName, $userLogin, $userPassword);
-		$stmt->execute();
-		$result = $stmt->get_result();
-        // get the latest user_id
-        $userID = $stmt->insert_id;
-        $stmt->close();
         
-        // if it is greater than zero, we know it was successfull to add the user
-        if($userID > 0) {   
-			sendResultInfoAsJson("OK");
-		    $conn->close();
+        // Database should tell us if there is a duplicate username that exists, we'll pass it to frontend
+        if($stmt->execute()) {
+            http_response_code(201);
+            $stmt->close();
+            $conn->close();
 		} else {
-			returnWithError("FAILED TO ADD USER");
+            http_response_code(400);
+            returnWithError($stmt->error);
+            $stmt->close();
 		    $conn->close();
         }
 	}

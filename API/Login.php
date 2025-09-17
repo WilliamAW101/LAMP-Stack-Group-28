@@ -2,6 +2,11 @@
 	require '../vendor/autoload.php';
 	require_once 'json.php';
 
+    if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+        http_response_code(405); // Method Not Allowed
+        exit();
+    }
+
 	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 	$dotenv->load();
 
@@ -15,42 +20,38 @@
     #Server Info
     $hostname = $_ENV['HOST_NAME'];
 
-    // variables to store our query information of the user logging in
-    $contact_id = 0;
-    $firstName = "";
-    $lastName = "";
+    // Before continuing, make sure everything is filled in
+    if (isEmpty($inData["login"])) {
+        http_response_code(400);
+        returnWithError("Invalid Username");
+        exit(1);
+    } else if (isEmpty($inData["password"] )) {
+        http_response_code(400);
+        returnWithError("Invalid Password");
+        exit(1);
+    }
 
-    $conn = new mysqli($hostname, $username, $password, $database);
-
-    // Debugging code to see if we can connect and query the database
-//     $result = $conn->query("SELECT * FROM Users where login='john_Bob'");
-//     $rows = [];
-//     while ($row = $result->fetch_assoc()) {
-//         $rows[] = $row;
-//     }
-// sendResultInfoAsJson(json_encode($rows));
-
-
+    $conn = new mysqli($hostname, $username, $password, $database); 	
     if( $conn->connect_error ) {
 		returnWithError( $conn->connect_error );
 	}
     else {
         // prevents SQL injection
-		$stmt = $conn->prepare("SELECT ID,password,first_name,last_name FROM Users WHERE login=?");
+		$stmt = $conn->prepare("SELECT ID,password FROM Users WHERE login=?");
 		$stmt->bind_param("s", $inData["login"]);
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$row = $result->fetch_assoc();
-
-        if (password_verify($inData["password"], $row["password"])) {
-          //  var_dump("Password is valid!");
+        if ($row && password_verify($inData["password"], $row["password"])) {
             $jwt = generateJWT($row['ID'], $_ENV['JWT_SECRET'], $hostname); 
-            //sendResultInfoAsJson(json_encode(["token" => $jwt]));
-            returnUserInfo( $row["first_name"], $row["last_name"], $row["ID"], json_encode($jwt));
+            sendResultInfoAsJson(json_encode(["token" => $jwt]));
 		    $stmt->close();
 		    $conn->close();
         } else {
+            http_response_code(400);
             returnWithError("Invalid Username or Password");
+            $stmt->close();
+		    $conn->close();
         }
 	}
 ?>
