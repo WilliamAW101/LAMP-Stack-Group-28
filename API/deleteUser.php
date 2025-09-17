@@ -25,7 +25,7 @@
         }
 
         try {
-            $decoded = validateJWT($inData["token"], $_ENV['JWT_SECRET']);
+            $decoded = validateJWT($inData["token"], $_ENV['JWT_SECRET'], $hostname);
             $userId = $decoded["id"]; // ID embedded in the token
 
             // Delete user account
@@ -34,7 +34,7 @@
             $stmt->execute();
 
             if ($stmt->affected_rows > 0) {
-                returnWithInfo("User deleted successfully.");
+                sendResultInfoAsJson("User deleted successfully.");
             } else {
                 returnWithError("No user found to delete.");
             }

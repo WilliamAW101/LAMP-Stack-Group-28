@@ -42,7 +42,6 @@
 		$stmt->execute();
 		$result = $stmt->get_result();
 		$row = $result->fetch_assoc();
-        
         if ($row && password_verify($inData["password"], $row["password"])) {
             $jwt = generateJWT($row['ID'], $_ENV['JWT_SECRET'], $hostname); 
             sendResultInfoAsJson(json_encode(["token" => $jwt]));
