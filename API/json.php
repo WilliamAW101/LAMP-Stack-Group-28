@@ -59,7 +59,7 @@
 
         if($stmt->affected_rows > 0)
 		{
-			sendResultInfoAsJson("OK");
+			http_response_code(200);
 		}
 		else
 		{
