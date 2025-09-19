@@ -21,7 +21,6 @@ import ColorModeSelect from '../theme/ColorModeSelect';
 import GoogleIcon from "../components/icons/GoogleIcon"
 import FacebookIcon from "../components/icons/FacebookIcon"
 import SitemarkIcon from "../components/icons/SitemarkIcon"
-import { sendRequest } from '@/context/api';
 import { useToast } from '@/context/toast';
 import { useUser } from '@/context/user/UserContext';
 import { useRouter } from 'next/navigation';
@@ -222,6 +221,11 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
               fullWidth
               variant="contained"
               onClick={validateInputs}
+              sx = {
+                {
+                  
+                }
+              }
             >
               Sign in
             </Button>
