@@ -2,7 +2,7 @@
     require '../vendor/autoload.php';
 	require_once 'json.php';
 
-    if ($_SERVER['REQUEST_METHOD'] != 'GET') {
+    if ($_SERVER['REQUEST_METHOD'] != 'POST') {
         http_response_code(405); // Method Not Allowed
         exit();
     }
