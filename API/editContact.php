@@ -37,6 +37,7 @@
             $stmt->close();
 
             if (!$current) {
+                http_response_code(404);
                 returnWithError("Contact not found for this user.");
                 $conn->close();
                 exit();
@@ -55,8 +56,12 @@
             $stmt->execute();
 
             if ($stmt->affected_rows != 0) {
-                var_dump("Contact updated successfully.");
+                http_response_code(200);
+                $message = "Contact updated successfully.";
+			    $retValue = '{"message":' . $message . '","error":"null"}';
+			    sendResultInfoAsJson( $retValue );
             } else {
+                http_response_code(400);
                 returnWithError("No contact found or nothing changed.");
             }
         }

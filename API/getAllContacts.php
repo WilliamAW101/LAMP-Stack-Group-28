@@ -27,8 +27,9 @@
         returnWithError("No token found");
         exit();
     }
-    $search = $_GET['search'];
-    $search = "%" . $search . "%";
+    $page = $_GET['page'];
+    $pageSize = $_GET['pageSize'];
+    
 
     $conn = new mysqli($hostname, $username, $password, $database); 	
     if( $conn->connect_error ) {
@@ -38,7 +39,7 @@
 
         if($user_ID != null) {
             $ID = $user_ID;
-            returnWithContactInfo( $conn, $ID, $search );
+            returnPageOfContacts( $conn, $ID, $page, $pageSize );
 		    $conn->close();
 		}
 		else {

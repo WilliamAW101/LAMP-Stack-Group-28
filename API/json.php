@@ -51,6 +51,34 @@
         $stmt->close();
     }
 
+	    function returnPageOfContacts( $conn, $userID, $page, $pageSize ) {
+        $searchResults = "";
+	    $searchCount = 0;
+		$offset = ($page - 1) * $pageSize;
+        $stmt = $conn->prepare("SELECT contact_id, first_name, last_name, email, phone FROM Contacts WHERE user_id = ? LIMIT $pageSize OFFSET $offset");
+		$stmt->bind_param("i", $userID);
+		$stmt->execute();
+		$result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+
+			if( $searchCount > 0 )
+			{
+				$searchResults .= ",";
+			}
+			$searchCount++;
+			$searchResults .= '{"contact_id":"' . $row['contact_id'] . '","firstName":"' . $row['first_name'] . '","lastName":"' . $row['last_name'] . '","email":"' . $row['email'] . '","phone":"' . $row['phone'] . '"}';
+		}
+
+		if ($searchCount == 0)
+		{
+			returnWithError("No Records Found");
+		} else {
+			sendResultInfoAsJson( '{"results":[' . $searchResults . '],"error":""}' );
+		}
+        $stmt->close();
+    }
+
     function addContact( $userFirstName, $userLastName, $contactPhone, $contactEmail, $userID, $conn ) {
         // insert contact info
         $stmt = $conn->prepare("INSERT INTO Contacts (first_name, last_name, phone, email, user_id) VALUES (?, ?, ?, ?, ?)");
@@ -60,9 +88,13 @@
         if($stmt->affected_rows > 0)
 		{
 			http_response_code(200);
+			$message = "Successfully Added Contact";
+			$retValue = '{"message":' . $message . '","error":"null"}';
+			sendResultInfoAsJson( $retValue );
 		}
 		else
 		{
+			http_response_code(400);
 			returnWithError("Failed to add contact: " + $stmt->error);
 		}
         $stmt->close();
@@ -96,5 +128,18 @@
 
 	function isEmpty($val) {
     	return !isset($val) || trim($val) === '';
+	}
+
+	function getBearerTokenFromApache() {
+    	if (function_exists('apache_request_headers')) {
+    	    $requestHeaders = apache_request_headers();
+    	    if (isset($requestHeaders['Authorization'])) {
+    	        $authorizationHeader = trim($requestHeaders['Authorization']);
+    	        if (preg_match('/Bearer\s(\S+)/', $authorizationHeader, $matches)) {
+    	            return $matches[1];
+    	        }
+    	    }
+    	}
+    	return null;
 	}
 ?>
