@@ -6,45 +6,35 @@ import { formHelperTextClasses } from '@mui/material/FormHelperText';
 import { iconButtonClasses } from '@mui/material/IconButton';
 import { brand } from '../themePrimitives';
 
-/* eslint-disable import/prefer-default-export */
 export const formInputCustomizations: Components<Theme> = {
   MuiFormControl: {
     styleOverrides: {
       root: ({ theme }) => ({
         [`& .${inputBaseClasses.root}`]: {
           marginTop: 6,
+          color: '#5a4030', // dark brown text
+          backgroundColor: '#f5eee6', // cream background
         },
         [`& .${inputLabelClasses.root}`]: {
           transform: 'translate(4px, -11px) scale(0.75)',
+          color: '#f5eee6', // cream label
           [`&.${outlinedInputClasses.focused}`]: {
             transform: 'translate(4px, -12px) scale(0.75)',
+            color: '#f5eee6', // keep label cream on focus
           },
         },
         [`& .${formHelperTextClasses.root}`]: {
           marginLeft: 2,
+          color: '#f5eee6', // helper/error text
         },
-        '& .MuiPickersInputBase-root': {
-          marginTop: 6,
-          border: `1px solid ${(theme.vars || theme).palette.divider}`,
-          ' .MuiPickersInputBase-sectionsContainer': {
-            padding: '10px 0',
-          },
-          ' .MuiPickersOutlinedInput-notchedOutline': {
-            border: 'none',
-          },
-          [`&.MuiPickersOutlinedInput-root.Mui-focused`]: {
-            border: `1px solid ${(theme.vars || theme).palette.divider}`,
-            outline: `3px solid ${alpha(brand[500], 0.5)}`,
-            borderColor: brand[400],
-            ' .MuiPickersOutlinedInput-notchedOutline': {
-              border: 'none',
-            },
-          },
-          [` .${iconButtonClasses.root}`]: {
-            border: 'none',
-            height: '34px',
-            width: '34px',
-          },
+        [`& .${outlinedInputClasses.notchedOutline}`]: {
+          borderColor: '#5a4030', // dark brown border
+        },
+        [`& .${outlinedInputClasses.root}:hover .${outlinedInputClasses.notchedOutline}`]: {
+          borderColor: '#8b5e3c', // slightly lighter brown on hover
+        },
+        [`& .${outlinedInputClasses.root}.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
+          borderColor: '#5a4030', // dark brown on focus
         },
       }),
     },

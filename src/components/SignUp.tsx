@@ -32,37 +32,35 @@ const Card = styled(MuiCard)(({ theme }) => ({
   padding: theme.spacing(4),
   gap: theme.spacing(2),
   margin: 'auto',
-  boxShadow:
-    'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
-  [theme.breakpoints.up('sm')]: {
-    width: '450px',
-  },
+  [theme.breakpoints.up('sm')]: { maxWidth: '450px' },
+  backgroundColor: 'rgba(68, 95, 71, 0.85) !important', // very dark brown
+  color: '#fffaf5', // light cream text
+  boxShadow: '0 5px 15px rgba(0,0,0,0.1)',
   ...theme.applyStyles('dark', {
-    boxShadow:
-      'hsla(220, 30%, 5%, 0.5) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.08) 0px 15px 35px -5px',
+    backgroundColor: 'rgba(68, 95, 71, 0.85) !important', // dark mode override
   }),
 }));
 
 const SignUpContainer = styled(Stack)(({ theme }) => ({
-  height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
+  height: '100dvh',
   minHeight: '100%',
   padding: theme.spacing(2),
   [theme.breakpoints.up('sm')]: {
     padding: theme.spacing(4),
   },
+  position: 'relative',
+  backgroundImage: 'url("background.jpg")', // make sure image is in public/images
+  backgroundSize: 'cover',
+  backgroundPosition: 'center',
+  backgroundRepeat: 'no-repeat',
   '&::before': {
     content: '""',
     display: 'block',
     position: 'absolute',
     zIndex: -1,
     inset: 0,
-    backgroundImage:
-      'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
-    backgroundRepeat: 'no-repeat',
-    ...theme.applyStyles('dark', {
-      backgroundImage:
-        'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
-    }),
+    // Optional: lighter overlay for readability
+    backgroundColor: 'rgba(179, 218, 176, 0.3)', // light cream overlay, less dark
   },
 }));
 
@@ -176,8 +174,21 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       <CssBaseline enableColorScheme />
       <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
       <SignUpContainer direction="column" justifyContent="space-between">
+        <Box sx={{ position: 'absolute', top: 16, left: 16, zIndex: 10 }}>
+          <Link
+            href="/"
+            variant="body2"
+            sx={{
+              color: '#f5eee6', 
+              fontWeight: 500,
+              textDecoration: 'none',
+              '&:hover': { textDecoration: 'underline', color: '#5a4030' },
+            }}
+          >
+            ← Back to Home
+          </Link>
+        </Box>
         <Card variant="outlined">
-          <SitemarkIcon />
           <Typography
             component="h1"
             variant="h4"
@@ -199,6 +210,15 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 fullWidth
                 id="firstname"
                 placeholder="Jon"
+                sx={{
+                  input: { color: '#f5eee6' }, // light cream text
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': { borderColor: '#f5eee6' }, // dark brown border
+                    '&:hover fieldset': { borderColor: '#8b5e3c' }, // hover slightly lighter brown
+                    '&.Mui-focused fieldset': { borderColor: '#5a4030' },
+                  },
+                  '& .MuiFormHelperText-root': { color: '#f5eee6' }, // error/helper text
+                }}
                 error={firstnameError}
                 helperText={firstNameErrorMessage}
                 color={firstnameError ? 'error' : 'primary'}
@@ -213,6 +233,15 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 fullWidth
                 id="lastname"
                 placeholder="Snow"
+                sx={{
+                  input: { color: '#f5eee6' }, // light cream text
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': { borderColor: '#f5eee6' }, // dark brown border
+                    '&:hover fieldset': { borderColor: '#8b5e3c' }, // hover slightly lighter brown
+                    '&.Mui-focused fieldset': { borderColor: '#5a4030' },
+                  },
+                  '& .MuiFormHelperText-root': { color: '#f5eee6' }, // error/helper text
+                }}
                 error={lastnameError}
                 helperText={lastNameErrorMessage}
                 color={lastnameError ? 'error' : 'primary'}
@@ -228,6 +257,15 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 name="email"
                 autoComplete="email"
                 variant="outlined"
+                sx={{
+                  input: { color: '#f5eee6' }, // light cream text
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': { borderColor: '#f5eee6' }, // dark brown border
+                    '&:hover fieldset': { borderColor: '#8b5e3c' }, // hover slightly lighter brown
+                    '&.Mui-focused fieldset': { borderColor: '#5a4030' },
+                  },
+                  '& .MuiFormHelperText-root': { color: '#f5eee6' }, // error/helper text
+                }}
                 error={emailError}
                 helperText={emailErrorMessage}
                 color={passwordError ? 'error' : 'primary'}
@@ -244,6 +282,15 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 id="password"
                 autoComplete="new-password"
                 variant="outlined"
+                sx={{
+                  input: { color: '#f5eee6' }, // light cream text
+                  '& .MuiOutlinedInput-root': {
+                    '& fieldset': { borderColor: '#f5eee6' }, // dark brown border
+                    '&:hover fieldset': { borderColor: '#8b5e3c' }, // hover slightly lighter brown
+                    '&.Mui-focused fieldset': { borderColor: '#5a4030' },
+                  },
+                  '& .MuiFormHelperText-root': { color: '#f5eee6' }, // error/helper text
+                }}
                 error={passwordError}
                 helperText={passwordErrorMessage}
                 color={passwordError ? 'error' : 'primary'}
@@ -258,6 +305,16 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               fullWidth
               variant="contained"
               onClick={validateInputs}
+              sx={{
+                borderColor: '#5a4030', // dark brown
+                color: '#5a4030', // dark brown text
+                fontWeight: 'bold',
+                backgroundColor: '#f5eee6', // light cream background
+                '&:hover': {
+                  backgroundColor: '#8b5e3c', // dark brown
+                  color: '#f5eee6', // light cream text
+                },
+              }}
             >
               Sign up
             </Button>
@@ -270,6 +327,16 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               fullWidth
               variant="outlined"
               onClick={() => alert('Sign up with Google')}
+              sx={{
+                borderColor: '#5a4030', // dark brown
+                color: '#5a4030', // dark brown text
+                fontWeight: 'bold',
+                backgroundColor: '#f5eee6', // light cream background
+                '&:hover': {
+                  backgroundColor: '#8b5e3c', // dark brown
+                  color: '#f5eee6', // light cream text
+                },
+              }}
               startIcon={<GoogleIcon />}
             >
               Sign up with Google
@@ -278,6 +345,16 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               fullWidth
               variant="outlined"
               onClick={() => alert('Sign up with Facebook')}
+              sx={{
+                borderColor: '#5a4030', // dark brown
+                color: '#5a4030', // dark brown text
+                fontWeight: 'bold',
+                backgroundColor: '#f5eee6', // light cream background
+                '&:hover': {
+                  backgroundColor: '#8b5e3c', // dark brown
+                  color: '#f5eee6', // light cream text
+                },
+              }}
               startIcon={<FacebookIcon />}
             >
               Sign up with Facebook
@@ -285,9 +362,14 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             <Typography sx={{ textAlign: 'center' }}>
               Already have an account?{' '}
               <Link
-                href="/material-ui/getting-started/templates/sign-in/"
+                href="/login"
                 variant="body2"
-                sx={{ alignSelf: 'center' }}
+                sx={{ 
+                  alignSelf: 'center',
+                  color: '#b47c4c',
+                  fontWeight: 500,
+                  '&:hover': { textDecoration: 'underline', color: '#f5eee6' },
+                 }}
               >
                 Sign in
               </Link>

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Crimson_Pro } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/context/toast";
 import { UserProvider } from "@/context/user/UserContext";
@@ -12,6 +12,13 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+const crimsonPro = Crimson_Pro({
+  weight: ["400", "600"],
+  style: ["italic"], // italic for weight 400/600
+  subsets: ["latin"],
+  variable: "--font-crimson-pro",
 });
 
 export const metadata: Metadata = {
