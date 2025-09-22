@@ -29,10 +29,13 @@
             $stmt->execute();
             var_dump($stmt->affected_rows);
             if ($stmt->affected_rows != 0) {
-                var_dump("Contact deleted successfully.");
+                $message = "Contact deleted successfully.";
+			    $retValue = '{"message":' . $message . '","error":"null"}';
+			    sendResultInfoAsJson( $retValue );
                 
             } else {
-                var_dump("No contact found with given ID.");
+                http_response_code(404);
+                returnWithError("No contact found with given ID.");
             }
         }
 
