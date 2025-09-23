@@ -22,6 +22,30 @@
 		sendResultInfoAsJson( $retValue );
 	}
 
+	function returnWithOneContactInfo( $conn, $userID, $contact_id ) {
+        $searchResults = "";
+	    $searchCount = 0;
+        
+        $stmt = $conn->prepare("SELECT contact_id, first_name, last_name, email, phone FROM Contacts WHERE user_id = ? AND contact_id = ?");
+		$stmt->bind_param("ii", $userID, $contact_id);
+		$stmt->execute();
+		$result = $stmt->get_result();
+		//var_dump("Query Result: ".$result);
+
+        if ($row = $result->fetch_assoc()) {
+			$searchCount++;
+			$searchResults .= '{"contact_id":"' . $row['contact_id'] . '","firstName":"' . $row['first_name'] . '","lastName":"' . $row['last_name'] . '","email":"' . $row['email'] . '","phone":"' . $row['phone'] . '","Error": null}';
+		}
+
+		if ($searchCount == 0)
+		{
+			returnWithError("No Records Found");
+		} else {
+			sendResultInfoAsJson($searchResults);
+		}
+        $stmt->close();
+    }
+
     function returnWithContactInfo( $conn, $userID, $search ) {
         $searchResults = "";
 	    $searchCount = 0;
