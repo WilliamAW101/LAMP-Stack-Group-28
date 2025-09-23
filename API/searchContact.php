@@ -29,7 +29,6 @@
     }
     $search = $_GET['search'];
     $search = "%" . $search . "%";
-
     $conn = new mysqli($hostname, $username, $password, $database); 	
     if( $conn->connect_error ) {
 		returnWithError( $conn->connect_error );

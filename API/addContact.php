@@ -21,7 +21,12 @@
     $hostname = $_ENV['HOST_NAME'];
 
     // User info
-    $jwt = $inData["token"];
+    $jwt = getBearerTokenFromApache();
+    if  ($jwt == null) {
+        http_response_code(401);
+        returnWithError("No token found");
+        exit();
+    }
     $userFirstName = $inData["first_name"];
     $userLastName = $inData["last_name"];
     $contactEmail = $inData["email"];

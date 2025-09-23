@@ -19,13 +19,15 @@
         returnWithError($conn->connect_error);
     } else {
         // Require a valid JWT token in the request
-        if (!isset($inData["token"])) {
-            returnWithError("Missing token");
+        $jwt = getBearerTokenFromApache();
+        if  ($jwt == null) {
+            http_response_code(401);
+            returnWithError("No token found");
             exit();
         }
 
         try {
-            $decoded = validateJWT($inData["token"], $_ENV['JWT_SECRET'], $hostname);
+            $decoded = validateJWT($jwt, $_ENV['JWT_SECRET'], $hostname);
             $userId = $decoded["id"]; // ID embedded in the token
 
             // Delete user account

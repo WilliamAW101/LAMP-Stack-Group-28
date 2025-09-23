@@ -13,7 +13,12 @@
     $database = $_ENV['DB'];
     $hostname = $_ENV['HOST_NAME'];
 
-    $jwt = $inData["token"];
+    $jwt = getBearerTokenFromApache();
+    if  ($jwt == null) {
+        http_response_code(401);
+        returnWithError("No token found");
+        exit();
+    }
 
     $conn = new mysqli($hostname, $username, $password, $database);
     var_dump("ContactID to delete: " . $inData["contact_id"]);
