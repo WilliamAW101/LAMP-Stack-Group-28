@@ -17,9 +17,13 @@
 		echo $obj;
 	}
 
-    function returnWithInfo( $firstName, $lastName, $id ) {
-		$retValue = '{"id":' . $id . ',"firstName":"' . $firstName . '","lastName":"' . $lastName . '","error":""}';
-		sendResultInfoAsJson( $retValue );
+    function returnWithInfo( $token, $message, $err ) {
+		$retValue = '{"token":' . $token . '}';
+		sendResultInfoAsJson( '{"data":[' . $retValue . '],"error":"' . $err . '","message":"' . $message . '"}' );
+	}
+
+	function returnWithInfoWithoutToken( $data, $message, $err ) {
+		sendResultInfoAsJson( '{"data":[' . $data . '],"error":"' . $err . '","message":"' . $message . '"}' );
 	}
 
 	function returnWithOneContactInfo( $conn, $userID, $contact_id ) {
@@ -30,7 +34,6 @@
 		$stmt->bind_param("ii", $userID, $contact_id);
 		$stmt->execute();
 		$result = $stmt->get_result();
-		//var_dump("Query Result: ".$result);
 
         if ($row = $result->fetch_assoc()) {
 			$searchCount++;
@@ -39,9 +42,9 @@
 
 		if ($searchCount == 0)
 		{
-			returnWithError("No Records Found");
+			returnWithInfoWithoutToken('null',"Query provided no data", "No Records Found");
 		} else {
-			sendResultInfoAsJson($searchResults);
+			returnWithInfoWithoutToken($searchResults ,"Query successfull!", "null");
 		}
         $stmt->close();
     }
@@ -54,7 +57,6 @@
 		$stmt->bind_param("iss", $userID, $search, $search);
 		$stmt->execute();
 		$result = $stmt->get_result();
-		//var_dump("Query Result: ".$result);
 
         while ($row = $result->fetch_assoc()) {
 
@@ -68,14 +70,14 @@
 
 		if ($searchCount == 0)
 		{
-			returnWithError("No Records Found");
+			returnWithInfoWithoutToken('null',"Query provided no data", "No Records Found");
 		} else {
-			sendResultInfoAsJson( '{"results":[' . $searchResults . '],"error":""}' );
+			returnWithInfoWithoutToken($searchResults ,"Query successfull!", "null");
 		}
         $stmt->close();
     }
 
-	    function returnPageOfContacts( $conn, $userID, $page, $pageSize ) {
+	function returnPageOfContacts( $conn, $userID, $page, $pageSize ) {
         $searchResults = "";
 	    $searchCount = 0;
 		$offset = ($page - 1) * $pageSize;
@@ -96,9 +98,9 @@
 
 		if ($searchCount == 0)
 		{
-			returnWithError("No Records Found");
+			returnWithInfoWithoutToken('null',"Query provided no data", "No Records Found");
 		} else {
-			sendResultInfoAsJson( '{"results":[' . $searchResults . '],"error":""}' );
+			returnWithInfoWithoutToken($searchResults ,"Query successfull!", "null");
 		}
         $stmt->close();
     }
@@ -113,13 +115,12 @@
 		{
 			http_response_code(200);
 			$message = "Successfully Added Contact";
-			$retValue = '{"message":' . $message . '","error":"null"}';
-			sendResultInfoAsJson( $retValue );
+			returnWithInfoWithoutToken('null',$message, "null");
 		}
 		else
 		{
 			http_response_code(400);
-			returnWithError("Failed to add contact: " + $stmt->error);
+			returnWithInfoWithoutToken('null',"Failed to add contact", $stmt->error);
 		}
         $stmt->close();
     }

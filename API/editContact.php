@@ -16,19 +16,16 @@
     $jwt = getBearerTokenFromApache();
     if  ($jwt == null) {
         http_response_code(401);
-        returnWithError("No token found");
+        returnWithInfoWithoutToken('null',"Did not send token in header", "No token found");
         exit();
     }
 
     $conn = new mysqli($hostname, $username, $password, $database);
-
     if ($conn->connect_error) {
-        returnWithError($conn->connect_error);
+        returnWithInfoWithoutToken('null',"Could not connect to database", $conn->connect_error);
     } else {
         $user_ID = validateJWT($jwt, $_ENV['JWT_SECRET'], $hostname); // get user ID from JWT
         if ($user_ID != null) {
-            var_dump("Users ID: " . $user_ID);
-
             $contactID   = $inData["contact_id"];
             
             // Get current values
@@ -43,7 +40,7 @@
 
             if (!$current) {
                 http_response_code(404);
-                returnWithError("Contact not found for this user.");
+                returnWithInfoWithoutToken('null',"Contact not found for this user", "Failed to parse contact");
                 $conn->close();
                 exit();
             }
@@ -63,11 +60,10 @@
             if ($stmt->affected_rows != 0) {
                 http_response_code(200);
                 $message = "Contact updated successfully.";
-			    $retValue = '{"message":' . $message . '","error":"null"}';
-			    sendResultInfoAsJson( $retValue );
+                returnWithInfoWithoutToken('null',$message, "null");
             } else {
                 http_response_code(400);
-                returnWithError("No contact found or nothing changed.");
+                returnWithInfoWithoutToken('null',"No contact found or nothing changed.", "Failed to change contact");
             }
         }
 

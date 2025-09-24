@@ -23,17 +23,17 @@
     // Before continuing, make sure everything is filled in
     if (isEmpty($inData["login"])) {
         http_response_code(400);
-        returnWithError("Invalid Username");
+        returnWithInfo("null","Username is empty", "Invalid Username"); 
         exit(1);
     } else if (isEmpty($inData["password"] )) {
         http_response_code(400);
-        returnWithError("Invalid Password");
+        returnWithInfo("null","Password is empty", "Invalid Password"); 
         exit(1);
     }
 
     $conn = new mysqli($hostname, $username, $password, $database); 	
     if( $conn->connect_error ) {
-		returnWithError( $conn->connect_error );
+        returnWithInfo("null", "Could not connect to database", $conn->connect_error);
 	}
     else {
         // prevents SQL injection
@@ -44,12 +44,13 @@
 		$row = $result->fetch_assoc();
         if ($row && password_verify($inData["password"], $row["password"])) {
             $jwt = generateJWT($row['ID'], $_ENV['JWT_SECRET'], $hostname); 
-            sendResultInfoAsJson(json_encode(["token" => $jwt]));
+            returnWithInfo($jwt,"Token created successfully!", "null"); 
+            // sendResultInfoAsJson(json_encode(["token" => $jwt]));
 		    $stmt->close();
 		    $conn->close();
         } else {
             http_response_code(400);
-            returnWithError("Invalid Username or Password");
+            returnWithInfo("null","Failed to either verify password or find login in database", "Invalid Username or Password"); 
             $stmt->close();
 		    $conn->close();
         }

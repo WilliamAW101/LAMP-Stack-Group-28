@@ -24,7 +24,7 @@
     $jwt = getBearerTokenFromApache();
     if  ($jwt == null) {
         http_response_code(401);
-        returnWithError("No token found");
+        returnWithInfoWithoutToken('null',"Did not send token in header", "No token found");
         exit();
     }
     $userFirstName = $inData["first_name"];
@@ -34,25 +34,25 @@
 
     if (isEmpty($userFirstName)) {
         http_response_code(400);
-        returnWithError("Invalid Firstname");
+        returnWithInfoWithoutToken('null',"Empty field for Firstname", "Invalid Firstname");
         exit(1);
     } else if (isEmpty($userLastName)) {
         http_response_code(400);
-        returnWithError("Invalid Lastname");
+        returnWithInfoWithoutToken('null',"Empty field for Lastname", "Invalid Lastname");
         exit(1);
     } else if (isEmpty($contactEmail)) {
         http_response_code(400);
-        returnWithError("Invalid Email");
+        returnWithInfoWithoutToken('null',"Empty field for Email", "Invalid Email");
         exit(1);
     } else if (isEmpty($contactPhone)) {
         http_response_code(400);
-        returnWithError("Invalid Phone");
+        returnWithInfoWithoutToken('null',"Empty field for Phone", "Invalid Phone");
         exit(1);
     }
 
     $conn = new mysqli($hostname, $username, $password, $database); 	
     if( $conn->connect_error ) {
-		returnWithError( $conn->connect_error );
+		returnWithInfoWithoutToken('null',"Could not connect to database", $conn->connect_error);
 	} else {
         $user_ID = validateJWT($jwt, $_ENV['JWT_SECRET'], $hostname);
         // if it is greater than zero, we know it was successfull to add the user
@@ -63,7 +63,7 @@
 		}
 		else {
             http_response_code(401);
-			returnWithError("Invalid Token");
+            returnWithInfoWithoutToken('null',"Bad token provided", "Invalid Token");
 		    $conn->close();
         }
     }

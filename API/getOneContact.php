@@ -24,13 +24,13 @@
     $jwt = getBearerTokenFromApache();
     if  ($jwt == null) {
         http_response_code(401);
-        returnWithError("No token found");
+        returnWithInfoWithoutToken('null',"Did not send token in header", "No token found");
         exit();
     }
     $contact_id = $_GET['contact_id'];
     $conn = new mysqli($hostname, $username, $password, $database); 	
     if( $conn->connect_error ) {
-		returnWithError( $conn->connect_error );
+		returnWithInfoWithoutToken('null',"Could not connect to database", $conn->connect_error);
 	} else {
         $user_ID = validateJWT($jwt, $_ENV['JWT_SECRET'], $hostname);
 
@@ -41,7 +41,7 @@
 		}
 		else {
             http_response_code(401);
-			returnWithError("Invalid or expired token");
+			returnWithInfoWithoutToken('null',"Bad token provided", "Invalid Token");
 		    $conn->close();
         }
     }
