@@ -14,6 +14,7 @@
     $hostname = $_ENV['HOST_NAME'];
 
     $jwt = $inData["token"];
+    $search = "%" . $inData["search"] . "%";
 
     $conn = new mysqli($hostname, $username, $password, $database);
 
@@ -22,7 +23,6 @@
     } else {
         $user_ID = validateJWT($jwt, $_ENV['JWT_SECRET'], $hostname); // get user ID from JWT
         if ($user_ID != null) {
-            var_dump("Users ID: " . $user_ID);
 
             $contactID   = $inData["contact_id"];
             
@@ -56,6 +56,7 @@
 
             if ($stmt->affected_rows != 0) {
                 var_dump("Contact updated successfully.");
+                returnWithContactInfo( $conn, $user_ID, $search );
             } else {
                 returnWithError("No contact found or nothing changed.");
             }

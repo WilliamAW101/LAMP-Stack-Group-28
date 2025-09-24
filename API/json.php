@@ -25,8 +25,8 @@
     function returnWithContactInfo( $conn, $userID, $search ) {
         $searchResults = "";
 	    $searchCount = 0;
-        
-        $stmt = $conn->prepare("SELECT first_name, last_name, email, phone FROM Contacts WHERE user_id = ? AND (first_name LIKE ? OR last_name LIKE ?)");
+
+        $stmt = $conn->prepare("SELECT first_name, last_name, email, phone, contact_id FROM Contacts WHERE user_id = ? AND (first_name LIKE ? OR last_name LIKE ?)");
 		$stmt->bind_param("iss", $userID, $search, $search);
 		$stmt->execute();
 		$result = $stmt->get_result();
