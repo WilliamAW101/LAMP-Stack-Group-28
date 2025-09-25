@@ -12,8 +12,13 @@ export default function Home() {
   const router = useRouter();
 
   const handleContactsClick = () => {
-    router.push('/contacts');
-  };
+    const token = localStorage.getItem('token');
+    if (token) {
+      router.push('/contacts');
+    } else {
+      router.push('/login');
+    };
+  }
 
   return (
     <div className={styles.page}>
@@ -56,7 +61,7 @@ export default function Home() {
               variant="outlined"
               size="large"
               startIcon={<GitHubIcon />}
-              href="https://github.com"
+              href="https://github.com/WilliamAW101/LAMP-Stack-Group-28"
               target="_blank"
               rel="noopener noreferrer"
               sx={{

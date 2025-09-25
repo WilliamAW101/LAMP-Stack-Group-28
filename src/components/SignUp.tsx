@@ -171,7 +171,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
       const result = await response.json(); // assuming PHP returns JSON
 
-      if (result.error === null) {
+      if (result.message === "Added user successfully") {
         // force user to login after signup
         router.push("/login");
         toast.success("Create account successfully, please login");
@@ -189,7 +189,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
-      <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} />
+      {/* <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} /> */}
       <SignUpContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
           <SitemarkIcon />
@@ -249,6 +249,18 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
               />
             </FormControl>
             <FormControl>
+              <FormLabel htmlFor="phone">Phone</FormLabel>
+              <TextField
+                required
+                fullWidth
+                id="phone"
+                placeholder="1234567890"
+                name="phone"
+                autoComplete="phone"
+                variant="outlined"
+              />
+            </FormControl>
+            <FormControl>
               <FormLabel htmlFor="user name">Username</FormLabel>
               <TextField
                 autoComplete="username"
@@ -278,10 +290,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 color={passwordError ? 'error' : 'primary'}
               />
             </FormControl>
-            <FormControlLabel
-              control={<Checkbox value="allowExtraEmails" color="primary" />}
-              label="I want to receive updates via email."
-            />
+
             <Button
               type="submit"
               fullWidth
@@ -295,22 +304,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             <Typography sx={{ color: 'text.secondary' }}>or</Typography>
           </Divider>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign up with Google')}
-              startIcon={<GoogleIcon />}
-            >
-              Sign up with Google
-            </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert('Sign up with Facebook')}
-              startIcon={<FacebookIcon />}
-            >
-              Sign up with Facebook
-            </Button>
             <Typography sx={{ textAlign: 'center' }}>
               Already have an account?{' '}
               <Link
