@@ -1,54 +1,61 @@
 <?php
-    require '../vendor/autoload.php';
-	require_once 'json.php';
+require '../vendor/autoload.php';
+require_once 'json.php';
 
-    if ($_SERVER['REQUEST_METHOD'] != 'GET') {
-        http_response_code(405); // Method Not Allowed
-        exit();
-    }
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 
-	$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-	$dotenv->load();
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 
-    $inData = getRequestInfo();
+// if ($_SERVER['REQUEST_METHOD'] != 'GET') {
+//     http_response_code(405); // Method Not Allowed
+//     exit();
+// }
 
-    // database info
-    $username = $_ENV['DB_USERNAME'];
-    $password = $_ENV['DB_PASSWORD'];
-    $database = $_ENV['DB'];
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
 
-    #Server Info
-    $hostname = $_ENV['HOST_NAME'];
+$inData = getRequestInfo();
 
-    // User info
-    $jwt = getBearerTokenFromApache();
-    if  ($jwt == null) {
+// database info
+$username = $_ENV['DB_USERNAME'];
+$password = $_ENV['DB_PASSWORD'];
+$database = $_ENV['DB'];
+
+#Server Info
+$hostname = $_ENV['HOST_NAME'];
+
+// User info
+$jwt = getBearerTokenFromApache();
+if ($jwt == null) {
+    http_response_code(401);
+    returnWithInfoWithoutToken('null', "Did not send token in header", "No token found");
+    exit();
+}
+$search = $_GET['search'];
+if ($search == "") {
+    returnWithInfoWithoutToken('null', "Please fill in the search category with at least one character", "Failed to search contact");
+    exit();
+}
+$search = "%" . $search . "%";
+
+$conn = new mysqli($hostname, $username, $password, $database);
+if ($conn->connect_error) {
+    returnWithInfoWithoutToken('null', "Could not connect to database", $conn->connect_error);
+} else {
+    $user_ID = validateJWT($jwt, $_ENV['JWT_SECRET'], $hostname);
+
+    if ($user_ID != null) {
+        $ID = $user_ID;
+        returnWithContactInfo($conn, $ID, $search);
+        $conn->close();
+    } else {
         http_response_code(401);
-        returnWithInfoWithoutToken('null',"Did not send token in header", "No token found");
-        exit();
+        returnWithInfoWithoutToken('null', "Bad token provided", "Invalid Token");
+        $conn->close();
     }
-    $search = $_GET['search'];
-    if ($search == "") {
-        returnWithInfoWithoutToken('null',"Please fill in the search category with at least one character", "Failed to search contact");
-        exit();
-    }
-    $search = "%" . $search . "%";
-
-    $conn = new mysqli($hostname, $username, $password, $database); 	
-    if( $conn->connect_error ) {
-		returnWithInfoWithoutToken('null',"Could not connect to database", $conn->connect_error);
-	} else {
-        $user_ID = validateJWT($jwt, $_ENV['JWT_SECRET'], $hostname);
-
-        if($user_ID != null) {
-            $ID = $user_ID;
-            returnWithContactInfo( $conn, $ID, $search );
-		    $conn->close();
-		}
-		else {
-            http_response_code(401);
-            returnWithInfoWithoutToken('null',"Bad token provided", "Invalid Token");
-		    $conn->close();
-        }
-    }
-?>
+}
