@@ -8,7 +8,7 @@ import MuiLink from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded';
-import { Link } from 'react-router';
+import Link from 'next/link';
 
 const PageContentHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -66,7 +66,7 @@ export default function PageContainer(props: PageContainerProps) {
                       component={Link}
                       underline="hover"
                       color="inherit"
-                      to={breadcrumb.path}
+                      href={breadcrumb.path}
                     >
                       {breadcrumb.title}
                     </MuiLink>

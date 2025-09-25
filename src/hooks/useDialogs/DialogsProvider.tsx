@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from 'react';
 import useEventCallback from '@mui/utils/useEventCallback';
 import DialogsContext from './DialogsContext';
@@ -36,7 +38,7 @@ export default function DialogsProvider(props: DialogProviderProps) {
     payload: P,
     options: OpenDialogOptions<R> = {},
   ) {
-    const { onClose = async () => {} } = options;
+    const { onClose = async () => { } } = options;
     let resolve: ((result: R) => void) | undefined;
     const promise = new Promise<R>((resolveImpl) => {
       resolve = resolveImpl;

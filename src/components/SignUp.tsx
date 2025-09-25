@@ -69,6 +69,8 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
+  const [usernameError, setUsernameError] = React.useState(false);
+  const [usernameErrorMessage, setUsernameErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [firstnameError, setFirstNameError] = React.useState(false);
@@ -86,9 +88,19 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
     const password = document.getElementById('password') as HTMLInputElement;
     const firstname = document.getElementById('firstname') as HTMLInputElement;
     const lastname = document.getElementById('lastname') as HTMLInputElement;
+    const username = document.getElementById('username') as HTMLInputElement;
 
 
     let isValid = true;
+
+    if (!username.value || username.value.length < 3 || !/^[a-zA-Z0-9_]+$/.test(username.value)) {
+      setUsernameError(true);
+      setUsernameErrorMessage('Username must be at least 3 characters and contain only letters, numbers, or underscores.');
+      isValid = false;
+    } else {
+      setUsernameError(false);
+      setUsernameErrorMessage('');
+    }
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
       setEmailError(true);
@@ -140,12 +152,12 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
     // Convert FormData to JSON object
     const jsonData = {
-      login: data.get('email'),
+      login: data.get('username'),
       password: data.get('password'),
       first_name: data.get('firstname'),
       last_name: data.get('lastname'),
-      // email: data.get('email'),
-      // phone: data.get('phone'),
+      email: data.get('email'),
+      phone: data.get('phone'),
     };
 
     try {
@@ -158,15 +170,18 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       });
 
       const result = await response.json(); // assuming PHP returns JSON
-      toast.success("Create account successfully");
 
-      setUser({
-        first_name: result.firstname,
-        last_name: result.lastname,
-      });
-      router.push("/")
+      if (result.error === null) {
+        // force user to login after signup
+        router.push("/login");
+        toast.success("Create account successfully, please login");
+      } else {
+        toast.error(result.message || result.error || "Signup failed");
+      }
+
     } catch (error) {
       console.error('Error sending data:', error);
+      toast.error("Network error. Please try again.");
     }
   };
 
@@ -231,6 +246,20 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 error={emailError}
                 helperText={emailErrorMessage}
                 color={passwordError ? 'error' : 'primary'}
+              />
+            </FormControl>
+            <FormControl>
+              <FormLabel htmlFor="user name">Username</FormLabel>
+              <TextField
+                autoComplete="username"
+                name="username"
+                required
+                fullWidth
+                id="username"
+                placeholder="Your username"
+                error={usernameError}
+                helperText={usernameErrorMessage}
+                color={usernameError ? 'error' : 'primary'}
               />
             </FormControl>
             <FormControl>

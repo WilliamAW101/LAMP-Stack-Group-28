@@ -7,15 +7,16 @@ import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
-import Container from '@mui/material/Container';
-import Divider from '@mui/material/Divider';
 import MenuItem from '@mui/material/MenuItem';
-import Drawer from '@mui/material/Drawer';
-import MenuIcon from '@mui/icons-material/Menu';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import ColorModeIconDropdown from '../theme/ColorModeIconDropdown';
 import SitemarkIcon from "../components/icons/SitemarkIcon"
 import { useRouter } from 'next/navigation';
+import { useUser } from '../context/user/UserContext';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Menu from '@mui/material/Menu';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import LogoutIcon from '@mui/icons-material/Logout';
+import PersonIcon from '@mui/icons-material/Person';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   display: 'flex',
@@ -24,21 +25,43 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   flexShrink: 0,
   borderRadius: `calc(${theme.shape.borderRadius}px + 8px)`,
   backdropFilter: 'blur(24px)',
-  border: '1px solid',
   borderColor: (theme.vars || theme).palette.divider,
   backgroundColor: theme.vars
     ? `rgba(${theme.vars.palette.background.defaultChannel} / 0.4)`
     : alpha(theme.palette.background.default, 0.4),
-  boxShadow: (theme.vars || theme).shadows[1],
-  padding: '8px 12px',
+  padding: '0 12px',
 }));
 
 export default function AppAppBar() {
   const router = useRouter();
+  const { user, logout, getToken } = useUser();
   const [open, setOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+  const [isClient, setIsClient] = React.useState(false);
+
+  // Only check authentication after client-side hydration
+  React.useEffect(() => {
+    setIsClient(true);
+    setIsAuthenticated(!!getToken());
+  }, [getToken]);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
+  };
+
+  const handleUserMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleUserMenuClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleLogout = () => {
+    logout();
+    handleUserMenuClose();
+    router.push('/');
   };
 
   const redirectLoginPage = () => {
@@ -54,65 +77,136 @@ export default function AppAppBar() {
       flexGrow: 1
     }}>
       <AppBar
-        position="fixed"
         sx={{
           boxShadow: 0,
           bgcolor: 'transparent',
           backgroundImage: 'none',
-          mt: 'calc(var(--template-frame-height, 0px) + 28px)',
+          mt: 'calc(var(--template-frame-height, 0px))',
+          width: '100%',
         }}
       >
-        <Container maxWidth="lg">
-          <StyledToolbar variant="dense" disableGutters>
-            <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
-              <SitemarkIcon />
-            </Box>
-            <Box
-              sx={{
-                display: { xs: 'none', md: 'flex' },
-                gap: 1,
-                alignItems: 'center',
-              }}
-            >
-              <Button color="primary" variant="text" size="small" onClick={redirectLoginPage}>
-                Sign in
-              </Button>
-              <Button color="primary" variant="contained" size="small" onClick={redirectSignupPage}>
-                Sign up
-              </Button>
-              <ColorModeIconDropdown />
-            </Box>
-            <Box sx={{ display: { xs: 'flex', md: 'none' }, gap: 1 }}>
-              <ColorModeIconDropdown size="medium" />
-              <IconButton aria-label="Menu button" onClick={toggleDrawer(true)}>
-                <MenuIcon />
-              </IconButton>
-              <Drawer
-                anchor="top"
-                open={open}
-                onClose={toggleDrawer(false)}
-                PaperProps={{
-                  sx: {
-                    top: 'var(--template-frame-height, 0px)',
-                  },
-                }}
-              >
-                <Box sx={{ p: 2, backgroundColor: 'background.default' }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                    }}
-                  >
-                    <IconButton onClick={toggleDrawer(false)}>
-                      <CloseRoundedIcon />
-                    </IconButton>
-                  </Box>
-                </Box>
-              </Drawer>
-            </Box>
-          </StyledToolbar>
-        </Container>
+        <StyledToolbar variant="dense" disableGutters sx={{ px: 2 }}>
+          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
+            <SitemarkIcon />
+          </Box>
+          <Box
+            sx={{
+              display: { xs: 'none', md: 'flex' },
+              gap: 1,
+              alignItems: 'center',
+            }}
+          >
+            {!isClient ? (
+              // Show loading state during hydration
+              <>
+                <Button color="primary" variant="text" size="small" disabled>
+                  Loading...
+                </Button>
+              </>
+            ) : isAuthenticated ? (
+              <>
+                <IconButton
+                  onClick={handleUserMenuClick}
+                  size="small"
+                  sx={{ ml: 2 }}
+                  aria-controls={Boolean(anchorEl) ? 'user-menu' : undefined}
+                  aria-haspopup="true"
+                  aria-expanded={Boolean(anchorEl) ? 'true' : undefined}
+                >
+                  <AccountCircleIcon />
+                </IconButton>
+                <Menu
+                  id="user-menu"
+                  anchorEl={anchorEl}
+                  open={Boolean(anchorEl)}
+                  onClose={handleUserMenuClose}
+                  onClick={handleUserMenuClose}
+                  PaperProps={{
+                    elevation: 0,
+                    sx: {
+                      overflow: 'visible',
+                      filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                      mt: 1.5,
+                      '& .MuiAvatar-root': {
+                        width: 32,
+                        height: 32,
+                        ml: -0.5,
+                        mr: 1,
+                      },
+                      '&:before': {
+                        content: '""',
+                        display: 'block',
+                        position: 'absolute',
+                        top: 0,
+                        right: 14,
+                        width: 10,
+                        height: 10,
+                        bgcolor: 'background.paper',
+                        transform: 'translateY(-50%) rotate(45deg)',
+                        zIndex: 0,
+                      },
+                    },
+                  }}
+                  transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                  anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+                >
+                  <MenuItem onClick={() => { handleUserMenuClose(); router.push('/contacts'); }}>
+                    <ListItemIcon>
+                      <PersonIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Dashboard</ListItemText>
+                  </MenuItem>
+                  <MenuItem onClick={handleLogout}>
+                    <ListItemIcon>
+                      <LogoutIcon fontSize="small" />
+                    </ListItemIcon>
+                    <ListItemText>Logout</ListItemText>
+                  </MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <>
+                <Button
+                  variant="text"
+                  size="medium"
+                  onClick={redirectLoginPage}
+                  sx={{
+                    color: "#47536B",         // muted gray-blue text
+                    textTransform: "none",    // keep text case
+                    fontWeight: 400,
+                    fontSize: "0.875rem",
+                    "&:hover": {
+                      backgroundColor: "transparent", // no background on hover
+                      textDecoration: "underline",    // optional, for link-like effect
+                    },
+                  }}
+                >
+                  Sign in
+                </Button>
+
+                <Button
+                  variant="contained"
+                  size="medium"
+                  onClick={redirectSignupPage}
+                  sx={{
+                    backgroundColor: "#05070a", // dark background
+                    color: "#fff",              // white text
+                    textTransform: "none",
+                    fontWeight: 600,
+                    boxShadow: "none",          // remove default shadow
+                    borderRadius: "8px",
+                    "&:hover": {
+                      backgroundColor: "#1a1d21", // slightly lighter on hover
+                      boxShadow: "none",
+                    },
+                  }}
+                >
+                  Sign up
+                </Button>
+              </>
+            )}
+          </Box>
+        </StyledToolbar>
       </AppBar>
     </Box>
   );

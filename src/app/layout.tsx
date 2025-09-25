@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/context/toast";
 import { UserProvider } from "@/context/user/UserContext";
+import NotificationsProvider from "@/hooks/useNotifications/NotificationsProvider";
+import DialogsProvider from "@/hooks/useDialogs/DialogsProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,9 +30,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ToastProvider>
-          <UserProvider>
-            {children}
-          </UserProvider>
+          <NotificationsProvider>
+            <DialogsProvider>
+              <UserProvider>
+                {children}
+              </UserProvider>
+            </DialogsProvider>
+          </NotificationsProvider>
         </ToastProvider>
       </body>
     </html>

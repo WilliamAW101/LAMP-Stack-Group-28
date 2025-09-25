@@ -1,3 +1,5 @@
+"use client"
+
 import * as React from 'react';
 import { type Theme, SxProps } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
@@ -12,9 +14,9 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import type { } from '@mui/material/themeCssVarsAugmentation';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Link } from 'react-router';
-import DashboardSidebarContext from '../context/DashboardSidebarContext';
-import { MINI_DRAWER_WIDTH } from '../theme/constants';
+import Link from 'next/link';
+import DashboardSidebarContext from '../../context/DashboardSidebarContext';
+import { MINI_DRAWER_WIDTH } from '../../theme/constants';
 
 export interface DashboardSidebarPageItemProps {
   id: string;
