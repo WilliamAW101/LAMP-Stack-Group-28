@@ -3,10 +3,8 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
@@ -16,26 +14,28 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import AppTheme from '../theme/AppTheme';
-import ColorModeSelect from '../theme/ColorModeSelect';
-import GoogleIcon from "../components/icons/GoogleIcon"
-import FacebookIcon from "../components/icons/FacebookIcon"
 import SitemarkIcon from "../components/icons/SitemarkIcon"
-import { useToast } from '@/context/toast';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/context/user/UserContext';
+import useNotifications from '@/hooks/useNotifications/useNotifications';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignSelf: 'center',
   width: '100%',
-  padding: theme.spacing(4),
-  gap: theme.spacing(2),
+  padding: theme.spacing(2),
+  gap: theme.spacing(1.5),
   margin: 'auto',
   boxShadow:
     'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
   [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(3),
     width: '450px',
+    gap: theme.spacing(2),
+  },
+  [theme.breakpoints.up('md')]: {
+    padding: theme.spacing(4),
   },
   ...theme.applyStyles('dark', {
     boxShadow:
@@ -46,8 +46,11 @@ const Card = styled(MuiCard)(({ theme }) => ({
 const SignUpContainer = styled(Stack)(({ theme }) => ({
   height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
   minHeight: '100%',
-  padding: theme.spacing(2),
+  padding: theme.spacing(1),
   [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(2),
+  },
+  [theme.breakpoints.up('md')]: {
     padding: theme.spacing(4),
   },
   '&::before': {
@@ -78,7 +81,8 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
   const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
 
-  const toast = useToast()
+
+  const notifications = useNotifications();
   const router = useRouter()
   const { setUser } = useUser();
 
@@ -174,14 +178,23 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       if (result.message === "Added user successfully") {
         // force user to login after signup
         router.push("/login");
-        toast.success("Create account successfully, please login");
+        notifications.show("Create account successfully, please login", {
+          severity: "success",
+          autoHideDuration: 3000,
+        });
       } else {
-        toast.error(result.message || result.error || "Signup failed");
+        notifications.show(result.message || result.error || "Signup failed", {
+          severity: "error",
+          autoHideDuration: 3000,
+        });
       }
 
     } catch (error) {
       console.error('Error sending data:', error);
-      toast.error("Network error. Please try again.");
+      notifications.show("Network error. Please try again.", {
+        severity: "error",
+        autoHideDuration: 3000,
+      });
     }
   };
 
@@ -196,7 +209,11 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
           <Typography
             component="h1"
             variant="h4"
-            sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
+            sx={{
+              width: '100%',
+              fontSize: { xs: '1.5rem', sm: '2rem', md: '2.15rem' },
+              textAlign: 'center'
+            }}
           >
             Sign up
           </Typography>

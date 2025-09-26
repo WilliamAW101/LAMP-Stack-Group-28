@@ -17,22 +17,25 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import ForgotPassword from './ForgotPassword';
 import AppTheme from '../theme/AppTheme';
-import ColorModeSelect from '../theme/ColorModeSelect';
 import SitemarkIcon from "../components/icons/SitemarkIcon"
-import { useToast } from '@/context/toast';
 import { useUser } from '@/context/user/UserContext';
 import { useRouter } from 'next/navigation';
+import useNotifications from '@/hooks/useNotifications/useNotifications';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignSelf: 'center',
   width: '100%',
-  padding: theme.spacing(4),
+  padding: theme.spacing(2),
   gap: theme.spacing(2),
   margin: 'auto',
   [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(3),
     maxWidth: '450px',
+  },
+  [theme.breakpoints.up('md')]: {
+    padding: theme.spacing(4),
   },
   boxShadow:
     'hsla(220, 30%, 5%, 0.05) 0px 5px 15px 0px, hsla(220, 25%, 10%, 0.05) 0px 15px 35px -5px',
@@ -45,8 +48,11 @@ const Card = styled(MuiCard)(({ theme }) => ({
 const SignInContainer = styled(Stack)(({ theme }) => ({
   height: 'calc((1 - var(--template-frame-height, 0)) * 100dvh)',
   minHeight: '100%',
-  padding: theme.spacing(2),
+  padding: theme.spacing(1),
   [theme.breakpoints.up('sm')]: {
+    padding: theme.spacing(2),
+  },
+  [theme.breakpoints.up('md')]: {
     padding: theme.spacing(4),
   },
   '&::before': {
@@ -73,12 +79,9 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [open, setOpen] = React.useState(false);
 
   const { setUser } = useUser();
-  const toast = useToast()
   const router = useRouter()
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+  const notifications = useNotifications();
 
   const handleClose = () => {
     setOpen(false);
@@ -118,14 +121,23 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           });
         }
       } else {
-        toast.error(result.message || result.error || "Login failed");
+        notifications.show(result.message || result.error || "Login failed", {
+          severity: "error",
+          autoHideDuration: 3000,
+        });
       }
 
-      toast.success("Login successful");
+      notifications.show("Login successful", {
+        severity: "success",
+        autoHideDuration: 3000,
+      });
       router.push("/");
     } catch (error) {
       console.error('Error sending data:', error);
-      toast.error("Network error. Please try again.");
+      notifications.show("Network error. Please try again.", {
+        severity: "error",
+        autoHideDuration: 3000,
+      });
     }
   };
 
@@ -163,7 +175,15 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
         {/* <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} /> */}
         <Card variant="outlined">
           <SitemarkIcon />
-          <Typography component="h1" variant="h4" sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}>
+          <Typography
+            component="h1"
+            variant="h4"
+            sx={{
+              width: '100%',
+              fontSize: { xs: '1.5rem', sm: '2rem', md: '2.15rem' },
+              textAlign: 'center'
+            }}
+          >
             Sign in
           </Typography>
           <Box

@@ -1,89 +1,64 @@
 "use client";
 
-import * as React from "react";
-import { useTheme } from "@mui/material/styles";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import DashboardHeader from "./DashboardHeader";
-import SitemarkIcon from "../icons/SitemarkIcon";
+import * as React from 'react';
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Header from '../Header';
+
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
+    open?: boolean;
+}>(({ theme, open }) => ({
+    flexGrow: 1,
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: 0,
+    ...(open && {
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+    }),
+    [theme.breakpoints.down('sm')]: {
+        padding: theme.spacing(1),
+    },
+}));
 
 interface DashboardLayoutProps {
-  children: React.ReactNode;
+    children: React.ReactNode;
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const theme = useTheme();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const [open, setOpen] = React.useState(!isMobile);
 
-  const [isDesktopNavigationExpanded, setIsDesktopNavigationExpanded] =
-    React.useState(true);
-  const [isMobileNavigationExpanded, setIsMobileNavigationExpanded] =
-    React.useState(false);
 
-  const isOverMdViewport = useMediaQuery(theme.breakpoints.up("md"));
+    React.useEffect(() => {
+        setOpen(!isMobile);
+    }, [isMobile]);
 
-  const isNavigationExpanded = isOverMdViewport
-    ? isDesktopNavigationExpanded
-    : isMobileNavigationExpanded;
-
-  const setIsNavigationExpanded = React.useCallback(
-    (newExpanded: boolean) => {
-      if (isOverMdViewport) {
-        setIsDesktopNavigationExpanded(newExpanded);
-      } else {
-        setIsMobileNavigationExpanded(newExpanded);
-      }
-    },
-    [isOverMdViewport]
-  );
-
-  const handleToggleHeaderMenu = React.useCallback(
-    (isExpanded: boolean) => {
-      setIsNavigationExpanded(isExpanded);
-    },
-    [setIsNavigationExpanded]
-  );
-
-  const layoutRef = React.useRef<HTMLDivElement>(null);
-
-  return (
-    <Box
-      ref={layoutRef}
-      sx={{
-        position: "relative",
-        display: "flex",
-        overflow: "hidden",
-        height: "100%",
-        width: "100%",
-      }}
-    >
-      <DashboardHeader
-        logo={<SitemarkIcon />}
-        title=""
-        menuOpen={isNavigationExpanded}
-        onToggleMenu={handleToggleHeaderMenu}
-      />
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          flex: 1,
-          minWidth: 0,
-        }}
-      >
-        <Toolbar sx={{ displayPrint: "none" }} />
-        <Box
-          component="main"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            overflow: "auto",
-          }}
-        >
-          {children}
+    return (
+        <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+            <CssBaseline />
+            <Header />
+            <Main
+                open={open}
+                sx={{
+                    width: '100%',
+                    minHeight: '100vh',
+                    pt: { xs: 8, sm: 10 },
+                    pb: { xs: 2, sm: 3 },
+                    px: { xs: 1, sm: 2, md: 3 },
+                }}
+            >
+                {children}
+            </Main>
         </Box>
-      </Box>
-    </Box>
-  );
+    );
 }

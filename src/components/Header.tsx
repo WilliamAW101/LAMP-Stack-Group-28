@@ -85,15 +85,16 @@ export default function AppAppBar() {
           width: '100%',
         }}
       >
-        <StyledToolbar variant="dense" disableGutters sx={{ px: 2 }}>
+        <StyledToolbar variant="dense" disableGutters sx={{ px: { xs: 1, sm: 2 } }}>
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
             <SitemarkIcon />
           </Box>
           <Box
             sx={{
-              display: { xs: 'none', md: 'flex' },
-              gap: 1,
+              display: { xs: 'flex', md: 'flex' },
+              gap: { xs: 0.5, sm: 1 },
               alignItems: 'center',
+              flexDirection: { xs: 'row', sm: 'row' },
             }}
           >
             {!isClient ? (
@@ -168,16 +169,18 @@ export default function AppAppBar() {
               <>
                 <Button
                   variant="text"
-                  size="medium"
+                  size="small"
                   onClick={redirectLoginPage}
                   sx={{
-                    color: "#47536B",         // muted gray-blue text
-                    textTransform: "none",    // keep text case
+                    color: "#47536B",
+                    textTransform: "none",
                     fontWeight: 400,
-                    fontSize: "0.875rem",
+                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    px: { xs: 1, sm: 2 },
+                    minWidth: { xs: 'auto', sm: 'auto' },
                     "&:hover": {
-                      backgroundColor: "transparent", // no background on hover
-                      textDecoration: "underline",    // optional, for link-like effect
+                      backgroundColor: "transparent",
+                      textDecoration: "underline",
                     },
                   }}
                 >
@@ -186,17 +189,20 @@ export default function AppAppBar() {
 
                 <Button
                   variant="contained"
-                  size="medium"
+                  size="small"
                   onClick={redirectSignupPage}
                   sx={{
-                    backgroundColor: "#05070a", // dark background
-                    color: "#fff",              // white text
+                    backgroundColor: "#05070a",
+                    color: "#fff",
                     textTransform: "none",
                     fontWeight: 600,
-                    boxShadow: "none",          // remove default shadow
+                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
+                    boxShadow: "none",
                     borderRadius: "8px",
+                    px: { xs: 1.5, sm: 2 },
+                    minWidth: { xs: 'auto', sm: 'auto' },
                     "&:hover": {
-                      backgroundColor: "#1a1d21", // slightly lighter on hover
+                      backgroundColor: "#1a1d21",
                       boxShadow: "none",
                     },
                   }}

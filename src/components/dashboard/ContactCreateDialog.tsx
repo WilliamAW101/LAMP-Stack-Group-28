@@ -24,6 +24,7 @@ interface ContactFormData {
 }
 
 export default function ContactCreateDialog({ open, onClose }: ContactCreateDialogProps) {
+
     const notifications = useNotifications();
     const [loading, setLoading] = React.useState(false);
     const [formData, setFormData] = React.useState<ContactFormData>({
@@ -84,6 +85,7 @@ export default function ContactCreateDialog({ open, onClose }: ContactCreateDial
             });
             onClose(true);
         } catch (error) {
+
             notifications.show(
                 `Failed to create contact: ${(error as Error).message}`,
                 {

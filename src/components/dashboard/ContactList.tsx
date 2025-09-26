@@ -44,7 +44,6 @@ const INITIAL_PAGE_SIZE = 10;
 export default function ContactList() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const notifications = useNotifications();
   const { getToken } = useUser();
 
   // Mounted ref to avoid state updates after unmount
@@ -400,54 +399,72 @@ export default function ContactList() {
       title={pageTitle}
       breadcrumbs={[{ title: pageTitle }]}
       actions={
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <Tooltip title="Reload data" placement="right" enterDelay={1000}>
-            <div>
-              <IconButton
-                size="small"
-                aria-label="refresh"
-                onClick={handleRefresh}
-              >
-                <RefreshIcon />
-              </IconButton>
-            </div>
-          </Tooltip>
-          <TextField
-            size="small"
-            placeholder="Search by first name or last name..."
-            value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-              endAdornment: searchValue && (
-                <InputAdornment position="end">
-                  <IconButton
-                    size="small"
-                    onClick={() => setSearchValue("")}
-                    edge="end"
-                  >
-                    <ClearIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              minWidth: 250,
-              '& .MuiOutlinedInput-root': {
-                backgroundColor: searchValue ? 'action.hover' : 'transparent',
-              }
-            }}
-          />
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          alignItems="center"
+          spacing={1}
+          sx={{ width: { xs: '100%', sm: 'auto' } }}
+        >
+          <Stack
+            direction="row"
+            alignItems="center"
+            spacing={1}
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
+          >
+            <Tooltip title="Reload data" placement="right" enterDelay={1000}>
+              <div>
+                <IconButton
+                  size="small"
+                  aria-label="refresh"
+                  onClick={handleRefresh}
+                >
+                  <RefreshIcon />
+                </IconButton>
+              </div>
+            </Tooltip>
+            <TextField
+              size="small"
+              placeholder="Search by first name or last name..."
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                ),
+                endAdornment: searchValue && (
+                  <InputAdornment position="end">
+                    <IconButton
+                      size="small"
+                      onClick={() => setSearchValue("")}
+                      edge="end"
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                minWidth: { xs: '100%', sm: 250 },
+                width: { xs: '100%', sm: 'auto' },
+                '& .MuiOutlinedInput-root': {
+                  backgroundColor: searchValue ? 'action.hover' : 'transparent',
+                }
+              }}
+            />
+          </Stack>
           <Button
             variant="contained"
             onClick={handleCreateClick}
             startIcon={<AddIcon />}
+            sx={{
+              width: { xs: '100%', sm: 'auto' },
+              minWidth: { xs: 'auto', sm: 'auto' }
+            }}
           >
-            Create
+            <Box sx={{ display: { xs: 'none', sm: 'inline' } }}>Create</Box>
+            <Box sx={{ display: { xs: 'inline', sm: 'none' } }}>Add</Box>
           </Button>
         </Stack>
       }
