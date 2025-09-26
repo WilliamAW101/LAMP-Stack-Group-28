@@ -1,0 +1,4 @@
+/vendor/
+/API/.env
+*.log
+*.env
