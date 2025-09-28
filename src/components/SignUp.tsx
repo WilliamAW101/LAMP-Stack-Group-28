@@ -14,10 +14,9 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import AppTheme from '../theme/AppTheme';
-import SitemarkIcon from "../components/icons/SitemarkIcon"
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/context/user/UserContext';
-import useNotifications from '@/hooks/useNotifications/useNotifications';
+import { useToast } from '@/context/toast';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -59,12 +58,9 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
     position: 'absolute',
     zIndex: -1,
     inset: 0,
-    backgroundImage:
-      'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
-    backgroundRepeat: 'no-repeat',
+    background: '#ffffff',
     ...theme.applyStyles('dark', {
-      backgroundImage:
-        'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
+      background: '#f5f5f5',
     }),
   },
 }));
@@ -82,7 +78,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
 
 
-  const notifications = useNotifications();
+  const toast = useToast();
   const router = useRouter()
   const { setUser } = useUser();
 
@@ -178,23 +174,14 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       if (result.message === "Added user successfully") {
         // force user to login after signup
         router.push("/login");
-        notifications.show("Create account successfully, please login", {
-          severity: "success",
-          autoHideDuration: 3000,
-        });
+        toast.success("Create account successfully, please login");
       } else {
-        notifications.show(result.message || result.error || "Signup failed", {
-          severity: "error",
-          autoHideDuration: 3000,
-        });
+        toast.error(result.message || result.error || "Signup failed");
       }
 
     } catch (error) {
       console.error('Error sending data:', error);
-      notifications.show("Network error. Please try again.", {
-        severity: "error",
-        autoHideDuration: 3000,
-      });
+      toast.error("Network error. Please try again.");
     }
   };
 
@@ -205,7 +192,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       {/* <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} /> */}
       <SignUpContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
-          <SitemarkIcon />
           <Typography
             component="h1"
             variant="h4"
@@ -324,7 +310,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
             <Typography sx={{ textAlign: 'center' }}>
               Already have an account?{' '}
               <Link
-                href="/material-ui/getting-started/templates/sign-in/"
+                href="/login"
                 variant="body2"
                 sx={{ alignSelf: 'center' }}
               >

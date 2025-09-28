@@ -8,7 +8,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuItem from '@mui/material/MenuItem';
-import SitemarkIcon from "../components/icons/SitemarkIcon"
 import { useRouter } from 'next/navigation';
 import { useUser } from '../context/user/UserContext';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -25,14 +24,18 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   flexShrink: 0,
   borderRadius: `calc(${theme.shape.borderRadius}px + 8px)`,
   backdropFilter: 'blur(24px)',
-  borderColor: (theme.vars || theme).palette.divider,
-  backgroundColor: theme.vars
-    ? `rgba(${theme.vars.palette.background.defaultChannel} / 0.4)`
-    : alpha(theme.palette.background.default, 0.4),
   padding: '0 12px',
+  ...theme.applyStyles('dark', {
+    backgroundColor: 'rgba(44, 62, 80, 0.2)',
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  }),
 }));
 
-export default function AppAppBar() {
+interface AppAppBarProps {
+  variant?: 'homepage' | 'default';
+}
+
+export default function AppAppBar({ variant = 'homepage' }: AppAppBarProps = {}) {
   const router = useRouter();
   const { user, logout, getToken } = useUser();
   const [open, setOpen] = React.useState(false);
@@ -87,7 +90,6 @@ export default function AppAppBar() {
       >
         <StyledToolbar variant="dense" disableGutters sx={{ px: { xs: 1, sm: 2 } }}>
           <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', px: 0 }}>
-            <SitemarkIcon />
           </Box>
           <Box
             sx={{
@@ -109,7 +111,14 @@ export default function AppAppBar() {
                 <IconButton
                   onClick={handleUserMenuClick}
                   size="small"
-                  sx={{ ml: 2 }}
+                  sx={{
+                    ml: 2,
+                    color: 'rgba(255, 255, 255, 0.9)',
+                    '&:hover': {
+                      backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                      color: '#ffffff',
+                    }
+                  }}
                   aria-controls={Boolean(anchorEl) ? 'user-menu' : undefined}
                   aria-haspopup="true"
                   aria-expanded={Boolean(anchorEl) ? 'true' : undefined}
@@ -172,16 +181,19 @@ export default function AppAppBar() {
                   size="small"
                   onClick={redirectLoginPage}
                   sx={{
-                    color: "#47536B",
+                    color: "rgba(255, 255, 255, 0.9)",
                     textTransform: "none",
-                    fontWeight: 400,
+                    fontWeight: 500,
                     fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                    px: { xs: 1, sm: 2 },
+                    px: { xs: 1.5, sm: 2.5 },
                     minWidth: { xs: 'auto', sm: 'auto' },
+                    borderRadius: "6px",
                     "&:hover": {
-                      backgroundColor: "transparent",
-                      textDecoration: "underline",
+                      backgroundColor: "rgba(255, 255, 255, 0.15)",
+                      color: "#ffffff",
+                      transform: "translateY(-1px)",
                     },
+                    transition: "all 0.3s ease"
                   }}
                 >
                   Sign in
@@ -192,19 +204,22 @@ export default function AppAppBar() {
                   size="small"
                   onClick={redirectSignupPage}
                   sx={{
-                    backgroundColor: "#05070a",
-                    color: "#fff",
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    color: "#2c3e50",
                     textTransform: "none",
                     fontWeight: 600,
                     fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                    boxShadow: "none",
-                    borderRadius: "8px",
-                    px: { xs: 1.5, sm: 2 },
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+                    borderRadius: "6px",
+                    px: { xs: 2, sm: 3 },
                     minWidth: { xs: 'auto', sm: 'auto' },
                     "&:hover": {
-                      backgroundColor: "#1a1d21",
-                      boxShadow: "none",
+                      backgroundColor: "#ffffff",
+                      color: "#1a252f",
+                      boxShadow: "0 6px 16px rgba(0, 0, 0, 0.2)",
+                      transform: "translateY(-2px)",
                     },
+                    transition: "all 0.3s ease"
                   }}
                 >
                   Sign up

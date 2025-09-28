@@ -33,33 +33,28 @@ export default function Home() {
               sx={{
                 mt: { xs: 2, sm: 4 },
                 mb: { xs: 1, sm: 2 },
-                fontSize: { xs: '1.5rem', sm: '2rem', md: '2.125rem' }
+                fontSize: { xs: '1.5rem', sm: '2rem', md: '2.125rem' },
+                color: '#ffffff',
+                fontWeight: 700,
+                textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
               }}
             >
               Group 28
             </Typography>
             <Typography
               variant="h4"
-              component="h1"
+              component="h2"
               sx={{
                 mt: { xs: 2, sm: 4 },
                 mb: { xs: 1, sm: 2 },
                 fontSize: { xs: '1.25rem', sm: '1.5rem', md: '2.125rem' },
-                lineHeight: { xs: 1.3, sm: 1.4 }
+                lineHeight: { xs: 1.3, sm: 1.4 },
+                color: 'rgba(255, 255, 255, 0.95)',
+                fontWeight: 600,
+                textShadow: '0 1px 3px rgba(0, 0, 0, 0.3)'
               }}
             >
               Welcome to Personal Contact Manager Dashboard
-            </Typography>
-            <Typography
-              variant="body1"
-              color="text.secondary"
-              sx={{
-                mb: { xs: 3, sm: 4 },
-                fontSize: { xs: '0.875rem', sm: '1rem' },
-                px: { xs: 1, sm: 0 }
-              }}
-            >
-              Manage your contacts efficiently with our modern dashboard
             </Typography>
           </Box>
 
@@ -81,30 +76,59 @@ export default function Home() {
                   width: { xs: '100%', sm: 'auto' },
                   py: { xs: 1.5, sm: 1.5 },
                   fontSize: { xs: '1rem', sm: '1.1rem' },
-                  px: { xs: 3, sm: 2 }
+                  px: { xs: 3, sm: 2 },
+                  backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                  color: '#ffffff',
+                  fontWeight: 600,
+                  border: '2px solid rgba(255, 255, 255, 0.4)',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                  backdropFilter: 'blur(10px)',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                    color: '#ffffff',
+                    border: '2px solid rgba(255, 255, 255, 0.6)',
+                    boxShadow: '0 6px 16px rgba(0, 0, 0, 0.15)',
+                    transform: 'translateY(-1px)',
+                  },
+                  transition: 'all 0.3s ease'
                 }}
               >
                 Contacts Dashboard
               </Button>
             )}
-
-            <Button
-              variant="outlined"
-              size="large"
-              startIcon={<GitHubIcon />}
-              href="https://github.com/WilliamAW101/LAMP-Stack-Group-28"
-              target="_blank"
-              rel="noopener noreferrer"
-              sx={{
-                minWidth: { xs: '100%', sm: 200 },
-                width: { xs: '100%', sm: 'auto' },
-                py: { xs: 1.5, sm: 1.5 },
-                fontSize: { xs: '1rem', sm: '1.1rem' },
-                px: { xs: 3, sm: 2 }
-              }}
-            >
-              GitHub Repository
-            </Button>
+            {!user && !getToken() && (
+              <Button
+                variant="outlined"
+                size="large"
+                startIcon={<GitHubIcon />}
+                href="https://github.com/WilliamAW101/LAMP-Stack-Group-28"
+                target="_blank"
+                rel="noopener noreferrer"
+                sx={{
+                  minWidth: { xs: '100%', sm: 200 },
+                  width: { xs: '100%', sm: 'auto' },
+                  py: { xs: 1.5, sm: 1.5 },
+                  fontSize: { xs: '1rem', sm: '1.1rem' },
+                  px: { xs: 3, sm: 2 },
+                  backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                  color: '#ffffff',
+                  fontWeight: 600,
+                  border: '2px solid rgba(255, 255, 255, 0.4)',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                  backdropFilter: 'blur(10px)',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+                    color: '#ffffff',
+                    border: '2px solid rgba(255, 255, 255, 0.6)',
+                    boxShadow: '0 6px 16px rgba(0, 0, 0, 0.15)',
+                    transform: 'translateY(-1px)',
+                  },
+                  transition: 'all 0.3s ease'
+                }}
+              >
+                GitHub Repository
+              </Button>
+            )}
           </Stack>
         </Container>
       </main>

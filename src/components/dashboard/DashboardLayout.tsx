@@ -44,7 +44,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     }, [isMobile]);
 
     return (
-        <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+        <Box sx={{
+            display: 'flex',
+            minHeight: '100vh',
+            background: '#ffffff',
+            ...theme.applyStyles('dark', {
+                background: '#f5f5f5',
+            }),
+        }}>
             <CssBaseline />
             <Header />
             <Main
@@ -55,6 +62,25 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                     pt: { xs: 8, sm: 10 },
                     pb: { xs: 2, sm: 3 },
                     px: { xs: 1, sm: 2, md: 3 },
+                    position: 'relative',
+                    '&::before': {
+                        content: '""',
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        background: `
+                            radial-gradient(circle at 20% 50%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                            radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.1) 0%, transparent 50%),
+                            radial-gradient(circle at 40% 80%, rgba(120, 219, 255, 0.1) 0%, transparent 50%)
+                        `,
+                        zIndex: 0,
+                    },
+                    '& > *': {
+                        position: 'relative',
+                        zIndex: 1,
+                    }
                 }}
             >
                 {children}

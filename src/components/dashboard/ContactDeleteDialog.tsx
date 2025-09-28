@@ -4,13 +4,17 @@ import * as React from "react";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import Avatar from "@mui/material/Avatar";
+import Divider from "@mui/material/Divider";
+import WarningIcon from "@mui/icons-material/Warning";
+import DeleteIcon from "@mui/icons-material/Delete";
+import CancelIcon from "@mui/icons-material/Cancel";
 import { deleteOne, type Contact } from "../../data/contacts";
-import useNotifications from "../../hooks/useNotifications/useNotifications";
+import { useToast } from "@/context/toast";
 
 export interface ContactDeleteDialogProps {
     open: boolean;
@@ -19,7 +23,7 @@ export interface ContactDeleteDialogProps {
 }
 
 export default function ContactDeleteDialog({ open, contact, onClose }: ContactDeleteDialogProps) {
-    const notifications = useNotifications();
+    const toast = useToast();
     const [loading, setLoading] = React.useState(false);
 
     const handleDelete = async () => {
@@ -28,22 +32,10 @@ export default function ContactDeleteDialog({ open, contact, onClose }: ContactD
         setLoading(true);
         try {
             await deleteOne(contact.id);
-            notifications.show(
-                `${contact.first_name} ${contact.last_name} has been deleted successfully.`,
-                {
-                    severity: "success",
-                    autoHideDuration: 3000,
-                }
-            );
+            toast.success(`${contact.first_name} ${contact.last_name} has been deleted successfully.`);
             onClose(true);
         } catch (error) {
-            notifications.show(
-                `Failed to delete contact: ${(error as Error).message}`,
-                {
-                    severity: "error",
-                    autoHideDuration: 5000,
-                }
-            );
+            toast.error(`Failed to delete contact: ${(error as Error).message}`);
         } finally {
             setLoading(false);
         }
@@ -63,35 +55,117 @@ export default function ContactDeleteDialog({ open, contact, onClose }: ContactD
             onClose={handleCancel}
             maxWidth="sm"
             fullWidth
+            PaperProps={{
+                sx: {
+                    borderRadius: 3,
+                    boxShadow: '0 24px 48px rgba(0, 0, 0, 0.15)',
+                    border: '1px solid rgba(0, 0, 0, 0.08)',
+                }
+            }}
         >
-            <DialogTitle>Delete Contact</DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    Are you sure you want to delete this contact? This action cannot be undone.
-                </DialogContentText>
-
-                <Box sx={{ mt: 2, p: 2, bgcolor: "grey.50", borderRadius: 1 }}>
-                    <Typography variant="subtitle1" fontWeight="medium">
-                        Contact Details:
+            {/* Header with Warning Icon */}
+            <Box sx={{
+                p: 3,
+                pb: 2,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+                borderBottom: '1px solid rgba(0, 0, 0, 0.08)'
+            }}>
+                <Avatar sx={{
+                    bgcolor: 'error.light',
+                    width: 48,
+                    height: 48
+                }}>
+                    <WarningIcon sx={{ fontSize: 28 }} />
+                </Avatar>
+                <Box>
+                    <Typography variant="h6" fontWeight={600} color="error">
+                        Delete Contact
                     </Typography>
-                    <Box sx={{ mt: 1 }}>
-                        <Typography variant="body2">
-                            <strong>Name:</strong> {contact.first_name} {contact.last_name}
-                        </Typography>
-                        <Typography variant="body2">
-                            <strong>Email:</strong> {contact.email}
-                        </Typography>
-                        <Typography variant="body2">
-                            <strong>Phone:</strong> {contact.phone}
-                        </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                        This action cannot be undone
+                    </Typography>
+                </Box>
+            </Box>
+
+            <DialogContent sx={{ p: 3, pt: 2 }}>
+                <Typography variant="body1" sx={{ mb: 3, color: 'text.primary' }}>
+                    Are you sure you want to permanently delete this contact? All associated data will be lost.
+                </Typography>
+
+                {/* Contact Information Card */}
+                <Box sx={{
+                    p: 3,
+                    bgcolor: 'grey.50',
+                    borderRadius: 2,
+                    border: '1px solid rgba(0, 0, 0, 0.05)',
+                    mb: 2
+                }}>
+                    <Typography variant="subtitle1" fontWeight={600} sx={{ mb: 2, color: 'text.primary' }}>
+                        Contact Information
+                    </Typography>
+
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                        <Avatar sx={{
+                            bgcolor: 'primary.main',
+                            width: 40,
+                            height: 40,
+                            fontSize: '1rem',
+                            fontWeight: 600
+                        }}>
+                            {contact.first_name[0]}{contact.last_name[0]}
+                        </Avatar>
+                        <Box>
+                            <Typography variant="subtitle1" fontWeight={600}>
+                                {contact.first_name} {contact.last_name}
+                            </Typography>
+                            <Typography variant="body2" color="text.secondary">
+                                Contact ID: #{contact.id}
+                            </Typography>
+                        </Box>
+                    </Box>
+
+                    <Divider sx={{ my: 2 }} />
+
+                    <Box sx={{ display: 'grid', gap: 1.5 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Typography variant="body2" fontWeight={500} sx={{ minWidth: 60, color: 'text.secondary' }}>
+                                Email:
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                                {contact.email}
+                            </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <Typography variant="body2" fontWeight={500} sx={{ minWidth: 60, color: 'text.secondary' }}>
+                                Phone:
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: 'text.primary' }}>
+                                {contact.phone}
+                            </Typography>
+                        </Box>
                     </Box>
                 </Box>
             </DialogContent>
-            <DialogActions sx={{ p: 2 }}>
+
+            <DialogActions sx={{
+                p: 3,
+                pt: 2,
+                gap: 2,
+                borderTop: '1px solid rgba(0, 0, 0, 0.08)'
+            }}>
                 <Button
                     onClick={handleCancel}
                     disabled={loading}
-                    color="inherit"
+                    variant="outlined"
+                    startIcon={<CancelIcon />}
+                    sx={{
+                        minWidth: 120,
+                        borderRadius: 2,
+                        textTransform: 'none',
+                        fontWeight: 500
+                    }}
                 >
                     Cancel
                 </Button>
@@ -100,6 +174,17 @@ export default function ContactDeleteDialog({ open, contact, onClose }: ContactD
                     variant="contained"
                     color="error"
                     disabled={loading}
+                    startIcon={loading ? null : <DeleteIcon />}
+                    sx={{
+                        minWidth: 140,
+                        borderRadius: 2,
+                        textTransform: 'none',
+                        fontWeight: 600,
+                        boxShadow: '0 4px 12px rgba(211, 47, 47, 0.3)',
+                        '&:hover': {
+                            boxShadow: '0 6px 16px rgba(211, 47, 47, 0.4)',
+                        }
+                    }}
                 >
                     {loading ? "Deleting..." : "Delete Contact"}
                 </Button>

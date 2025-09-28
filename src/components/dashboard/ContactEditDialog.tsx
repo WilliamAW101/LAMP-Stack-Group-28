@@ -10,7 +10,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import { getOne, updateOne, validate, type Contact } from "../../data/contacts";
-import useNotifications from "../../hooks/useNotifications/useNotifications";
+import { useToast } from "@/context/toast";
 
 export interface ContactEditDialogProps {
     open: boolean;
@@ -26,7 +26,7 @@ interface ContactFormData {
 }
 
 export default function ContactEditDialog({ open, contactId, onClose }: ContactEditDialogProps) {
-    const notifications = useNotifications();
+    const toast = useToast();
     const [loading, setLoading] = React.useState(false);
     const [initialLoading, setInitialLoading] = React.useState(false);
     const [formData, setFormData] = React.useState<ContactFormData>({
@@ -67,13 +67,7 @@ export default function ContactEditDialog({ open, contactId, onClose }: ContactE
             });
             setErrors({});
         } catch (error) {
-            notifications.show(
-                `Failed to load contact: ${(error as Error).message}`,
-                {
-                    severity: "error",
-                    autoHideDuration: 5000,
-                }
-            );
+            toast.error(`Failed to load contact: ${(error as Error).message}`);
             onClose(false);
         } finally {
             setInitialLoading(false);
@@ -113,19 +107,10 @@ export default function ContactEditDialog({ open, contactId, onClose }: ContactE
         setLoading(true);
         try {
             await updateOne(contactId, formData);
-            notifications.show("Contact updated successfully!", {
-                severity: "success",
-                autoHideDuration: 3000,
-            });
+            toast.success("Contact updated successfully!");
             onClose(true);
         } catch (error) {
-            notifications.show(
-                `Failed to update contact: ${(error as Error).message}`,
-                {
-                    severity: "error",
-                    autoHideDuration: 5000,
-                }
-            );
+            toast.error(`Failed to update contact: ${(error as Error).message}`);
         } finally {
             setLoading(false);
         }

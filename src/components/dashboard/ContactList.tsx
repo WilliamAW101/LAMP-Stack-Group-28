@@ -28,7 +28,6 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { useRouter, useSearchParams } from "next/navigation";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
-import useNotifications from "../../hooks/useNotifications/useNotifications";
 import { useUser } from "../../context/user/UserContext";
 import {
   getMany as getContacts,
@@ -260,7 +259,6 @@ export default function ContactList() {
 
   const handleRefresh = React.useCallback(() => {
     if (!isLoading && isMounted.current) {
-      // Generate unique request ID for this request
       const requestId = ++currentRequestId.current;
 
       const fetchData = async () => {
@@ -391,13 +389,9 @@ export default function ContactList() {
 
   const pageTitle = "Contacts";
 
-  /**
-   * Render
-   */
   return (
     <PageContainer
       title={pageTitle}
-      breadcrumbs={[{ title: pageTitle }]}
       actions={
         <Stack
           direction={{ xs: 'column', sm: 'row' }}

@@ -3,9 +3,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Divider from '@mui/material/Divider';
 import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
@@ -15,12 +13,10 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
-import ForgotPassword from './ForgotPassword';
 import AppTheme from '../theme/AppTheme';
-import SitemarkIcon from "../components/icons/SitemarkIcon"
 import { useUser } from '@/context/user/UserContext';
 import { useRouter } from 'next/navigation';
-import useNotifications from '@/hooks/useNotifications/useNotifications';
+import { useToast } from '@/context/toast';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -61,12 +57,9 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
     position: 'absolute',
     zIndex: -1,
     inset: 0,
-    backgroundImage:
-      'radial-gradient(ellipse at 50% 50%, hsl(210, 100%, 97%), hsl(0, 0%, 100%))',
-    backgroundRepeat: 'no-repeat',
+    background: '#ffffff',
     ...theme.applyStyles('dark', {
-      backgroundImage:
-        'radial-gradient(at 50% 50%, hsla(210, 100%, 16%, 0.5), hsl(220, 30%, 5%))',
+      background: '#f5f5f5',
     }),
   },
 }));
@@ -77,11 +70,10 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const [open, setOpen] = React.useState(false);
-
-  const { setUser } = useUser();
   const router = useRouter()
+  const toast = useToast();
+  const { setUser } = useUser();
 
-  const notifications = useNotifications();
 
   const handleClose = () => {
     setOpen(false);
@@ -121,23 +113,17 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
           });
         }
       } else {
-        notifications.show(result.message || result.error || "Login failed", {
-          severity: "error",
-          autoHideDuration: 3000,
-        });
+        toast.error(result.message || result.error || "Login failed");
+
       }
 
-      notifications.show("Login successful", {
-        severity: "success",
-        autoHideDuration: 3000,
-      });
+      toast.success("Login successful");
+
       router.push("/");
     } catch (error) {
       console.error('Error sending data:', error);
-      notifications.show("Network error. Please try again.", {
-        severity: "error",
-        autoHideDuration: 3000,
-      });
+      toast.error("Network error. Please try again.");
+
     }
   };
 
@@ -174,7 +160,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
       <SignInContainer direction="column" justifyContent="space-between">
         {/* <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} /> */}
         <Card variant="outlined">
-          <SitemarkIcon />
           <Typography
             component="h1"
             variant="h4"
@@ -209,7 +194,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 color={usernameError ? 'error' : 'primary'}
               />
             </FormControl>
-            <FormControl>
+            <FormControl sx={{ marginBottom: 2 }}>
               <FormLabel htmlFor="password">Password</FormLabel>
               <TextField
                 error={passwordError}
@@ -225,8 +210,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
                 color={passwordError ? 'error' : 'primary'}
               />
             </FormControl>
-            <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
-            <ForgotPassword open={open} handleClose={handleClose} />
             <Button type="submit" fullWidth variant="contained" onClick={validateInputs}>
               Sign in
             </Button>

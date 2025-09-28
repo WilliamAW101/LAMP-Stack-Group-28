@@ -9,7 +9,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { createOne, validate, type Contact } from "../../data/contacts";
-import useNotifications from "../../hooks/useNotifications/useNotifications";
+import { useToast } from "@/context/toast";
 
 export interface ContactCreateDialogProps {
     open: boolean;
@@ -25,7 +25,7 @@ interface ContactFormData {
 
 export default function ContactCreateDialog({ open, onClose }: ContactCreateDialogProps) {
 
-    const notifications = useNotifications();
+    const toast = useToast();
     const [loading, setLoading] = React.useState(false);
     const [formData, setFormData] = React.useState<ContactFormData>({
         first_name: "",
@@ -79,20 +79,11 @@ export default function ContactCreateDialog({ open, onClose }: ContactCreateDial
         setLoading(true);
         try {
             await createOne(formData);
-            notifications.show("Contact created successfully!", {
-                severity: "success",
-                autoHideDuration: 3000,
-            });
+            toast.success("Contact created successfully!");
             onClose(true);
         } catch (error) {
 
-            notifications.show(
-                `Failed to create contact: ${(error as Error).message}`,
-                {
-                    severity: "error",
-                    autoHideDuration: 5000,
-                }
-            );
+            toast.error(`Failed to create contact: ${(error as Error).message}`);
         } finally {
             setLoading(false);
         }
