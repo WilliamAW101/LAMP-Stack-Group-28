@@ -2,6 +2,6 @@
 
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 
-export default function EmployeesLayout({ children }: { children: React.ReactNode }) {
+export default function ContactsLayout({ children }: { children: React.ReactNode }) {
     return <DashboardLayout>{children}</DashboardLayout>;
 }

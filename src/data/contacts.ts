@@ -41,6 +41,7 @@ export async function getMany({
         pageSize: String(pageSize),
     });
 
+    const baseUrl = process.env.REMOTE_URL;
     // Add search parameter if provided and not empty
     if (searchValue && searchValue.trim().length > 0) {
         params.set("search", searchValue.trim());
@@ -50,8 +51,8 @@ export async function getMany({
     try {
         // Use search endpoint if search value is provided, otherwise use getAllContacts
         const endpoint = searchValue && searchValue.trim().length > 0
-            ? `http://localhost:8000/searchContact.php?search=${encodeURIComponent(searchValue.trim())}`
-            : `http://localhost:8000/getAllContacts.php?${params.toString()}`;
+            ? `${baseUrl}/searchContact.php?search=${encodeURIComponent(searchValue.trim())}`
+            : `${baseUrl}/getAllContacts.php?${params.toString()}`;
 
         const response = await fetch(endpoint, {
             method: "GET",
@@ -121,9 +122,10 @@ export async function getMany({
 
 export async function getOne(contactId: number): Promise<Contact> {
     const token = localStorage.getItem('token');
+    const baseUrl = process.env.REMOTE_URL;
 
     try {
-        const response = await fetch(`http://localhost:8000/getOneContact.php?contact_id=${contactId}`, {
+        const response = await fetch(`${baseUrl}/getOneContact.php?contact_id=${contactId}`, {
             method: 'GET',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -155,9 +157,11 @@ export async function getOne(contactId: number): Promise<Contact> {
 
 export async function createOne(data: Omit<Contact, 'id'>): Promise<Contact> {
     const token = localStorage.getItem('token');
+    const baseUrl = process.env.REMOTE_URL;
+
 
     try {
-        const response = await fetch('http://localhost:8000/addContact.php', {
+        const response = await fetch(`${baseUrl}/addContact.php`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -195,14 +199,14 @@ export async function createOne(data: Omit<Contact, 'id'>): Promise<Contact> {
 
 export async function updateOne(contactId: number, data: Partial<Omit<Contact, 'id'>>): Promise<Contact> {
     const token = localStorage.getItem('token');
-
+    const baseUrl = process.env.REMOTE_URL;
     const jsonData = {
         contact_id: contactId,
         ...data,
     };
 
     try {
-        const response = await fetch('http://localhost:8000/editContact.php', {
+        const response = await fetch(`${baseUrl}/editContact.php`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -240,13 +244,13 @@ export async function updateOne(contactId: number, data: Partial<Omit<Contact, '
 
 export async function deleteOne(contactId: number): Promise<void> {
     const token = localStorage.getItem('token');
-
+    const baseUrl = process.env.REMOTE_URL;
     const jsonData = {
         contact_id: contactId,
     };
 
     try {
-        const response = await fetch('http://localhost:8000/deleteContact.php', {
+        const response = await fetch(`${baseUrl}/deleteContact.php`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

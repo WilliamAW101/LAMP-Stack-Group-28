@@ -74,6 +74,8 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const toast = useToast();
   const { setUser } = useUser();
 
+  const baseUrl = process.env.REMOTE_URL;
+
 
   const handleClose = () => {
     setOpen(false);
@@ -92,7 +94,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     };
 
     try {
-      const response = await fetch('http://localhost:8000/Login.php', {
+      const response = await fetch(`${baseUrl}/Login.php`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(jsonData),
@@ -100,26 +102,26 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
       const result = await response.json();
 
-      if (result.data) {
-        const token = result.data.token
-        if (token) {
-          localStorage.setItem('token', token);
+      if (result.data && result.data.token) {
+        const token = result.data.token;
+        localStorage.setItem('token', token);
 
-          setUser({
-            token: token,
-            username: jsonData.login as string,
-            first_name: result.first_name || result.data?.first_name,
-            last_name: result.last_name || result.data?.last_name,
-          });
-        }
+        // Extract user data from the response
+        const userData = {
+          token: token,
+          username: jsonData.login as string,
+          first_name: result.data.first_name || result.first_name || '',
+          last_name: result.data.last_name || result.last_name || '',
+          email: result.data.email || '',
+        };
+
+        setUser(userData);
+        toast.success("Login successful");
+        router.push("/contacts");
       } else {
         toast.error(result.message || result.error || "Login failed");
-
+        return;
       }
-
-      toast.success("Login successful");
-
-      router.push("/");
     } catch (error) {
       console.error('Error sending data:', error);
       toast.error("Network error. Please try again.");

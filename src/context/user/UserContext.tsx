@@ -27,8 +27,19 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         if (typeof window !== 'undefined') {
             const storedUser = localStorage.getItem('user');
-            if (storedUser) {
-                setUserState(JSON.parse(storedUser));
+            const storedToken = localStorage.getItem('token');
+
+            if (storedUser && storedToken) {
+                try {
+                    const userData = JSON.parse(storedUser);
+                    // Ensure token is up to date
+                    setUserState({ ...userData, token: storedToken });
+                } catch (error) {
+                    console.error('Error parsing stored user data:', error);
+                    // Clear corrupted data
+                    localStorage.removeItem('user');
+                    localStorage.removeItem('token');
+                }
             }
         }
     }, []);

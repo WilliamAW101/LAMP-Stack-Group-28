@@ -77,6 +77,8 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
   const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
 
+  const baseUrl = process.env.REMOTE_URL;
+
 
   const toast = useToast();
   const router = useRouter()
@@ -161,7 +163,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
     };
 
     try {
-      const response = await fetch('http://localhost:8000/Signup.php', {
+      const response = await fetch(`${baseUrl}/Signup.php`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json', // send JSON
