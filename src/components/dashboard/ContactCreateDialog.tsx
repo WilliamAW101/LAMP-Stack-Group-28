@@ -8,7 +8,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { createOne, validate, type Contact } from "../../data/contacts";
+import { createOne, validate } from "../../data/contacts";
 import { useToast } from "@/context/toast";
 
 export interface ContactCreateDialogProps {

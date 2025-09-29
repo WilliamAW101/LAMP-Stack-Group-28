@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -37,8 +37,7 @@ interface AppAppBarProps {
 
 export default function AppAppBar({ variant = 'homepage' }: AppAppBarProps = {}) {
   const router = useRouter();
-  const { user, logout, getToken } = useUser();
-  const [open, setOpen] = React.useState(false);
+  const { logout, getToken } = useUser();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [isAuthenticated, setIsAuthenticated] = React.useState(false);
   const [isClient, setIsClient] = React.useState(false);
@@ -49,9 +48,6 @@ export default function AppAppBar({ variant = 'homepage' }: AppAppBarProps = {})
     setIsAuthenticated(!!getToken());
   }, [getToken]);
 
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
 
   const handleUserMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);

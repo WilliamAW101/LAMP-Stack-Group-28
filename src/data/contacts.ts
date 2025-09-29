@@ -100,10 +100,10 @@ export async function getMany({
         }
 
         // Transform the API response to match our Contact interface
-        const contacts: Contact[] = rawContacts.map((contact: any) => ({
-            id: parseInt(contact.contact_id),
-            first_name: contact.firstName,
-            last_name: contact.lastName,
+        const contacts: Contact[] = rawContacts.map((contact: Contact) => ({
+            id: contact.id,
+            first_name: contact.first_name,
+            last_name: contact.last_name,
             email: contact.email,
             phone: contact.phone,
         }));

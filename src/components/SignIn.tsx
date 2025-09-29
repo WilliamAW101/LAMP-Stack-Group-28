@@ -69,17 +69,11 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const [usernameErrorMessage, setUsernameErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
-  const [open, setOpen] = React.useState(false);
   const router = useRouter()
   const toast = useToast();
   const { setUser } = useUser();
 
   const baseUrl = process.env.REMOTE_URL;
-
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();

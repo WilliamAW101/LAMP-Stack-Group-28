@@ -82,7 +82,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
   const toast = useToast();
   const router = useRouter()
-  const { setUser } = useUser();
 
 
   const validateInputs = () => {
