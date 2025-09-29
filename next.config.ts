@@ -9,7 +9,9 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   images: {
     unoptimized: true
-  }
+  },
+  basePath: process.env.NODE_ENV === 'production' ? '/LAMP-Stack-Group-28' : '',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/LAMP-Stack-Group-28/' : '',
 };
 
 export default nextConfig;
