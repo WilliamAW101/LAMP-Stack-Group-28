@@ -3,7 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   env: {
-    REMOTE_URL: process.env.REMOTE_URL,
+    REMOTE_URL: process.env.REMOTE_URL || 'http://localhost:8000',
   },
   output: 'export',
   trailingSlash: true,

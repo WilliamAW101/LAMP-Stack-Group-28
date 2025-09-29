@@ -31,10 +31,10 @@ export default function ContactDeleteDialog({ open, contact, onClose }: ContactD
         setLoading(true);
         try {
             await deleteOne(contact.id);
-            toast.success(`${contact.first_name} ${contact.last_name} has been deleted successfully.`);
+            toast.success(`${contact.first_name} ${contact.last_name} has been deleted successfully.`, { autoHideDuration: 3000 });
             onClose(true);
         } catch (error) {
-            toast.error(`Failed to delete contact: ${(error as Error).message}`);
+            toast.error(`Failed to delete contact: ${(error as Error).message}`, { autoHideDuration: 3000 });
         } finally {
             setLoading(false);
         }

@@ -215,7 +215,6 @@ export interface ConfirmDialogPayload extends ConfirmOptions {
 
 export type ConfirmDialogProps = DialogProps<ConfirmDialogPayload, boolean>;
 
-
 export function ConfirmDialog({ open, payload, onClose }: ConfirmDialogProps) {
   const cancelButtonProps = useDialogLoadingButton(() => onClose(false));
   const okButtonProps = useDialogLoadingButton(() => onClose(true));

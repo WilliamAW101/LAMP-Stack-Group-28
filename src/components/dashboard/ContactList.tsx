@@ -25,6 +25,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
+import ContactsIcon from "@mui/icons-material/Contacts";
 import { useRouter, useSearchParams } from "next/navigation";
 import TextField from "@mui/material/TextField";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -358,27 +359,67 @@ export default function ContactList() {
    */
   const columns = React.useMemo<GridColDef[]>(
     () => [
-      { field: "id", headerName: "ID", width: 80 },
-      { field: "first_name", headerName: "First Name", width: 140 },
-      { field: "last_name", headerName: "Last Name", width: 140 },
-      { field: "email", headerName: "Email", width: 200 },
-      { field: "phone", headerName: "Phone", width: 140 },
+      {
+        field: "id",
+        headerName: "ID",
+        width: 80,
+        headerAlign: 'center',
+        align: 'center',
+        sortable: false,
+      },
+      {
+        field: "first_name",
+        headerName: "First Name",
+        width: 150,
+        headerAlign: 'left',
+        align: 'left',
+        minWidth: 120,
+      },
+      {
+        field: "last_name",
+        headerName: "Last Name",
+        width: 150,
+        headerAlign: 'left',
+        align: 'left',
+        minWidth: 120,
+      },
+      {
+        field: "email",
+        headerName: "Email",
+        width: 220,
+        headerAlign: 'left',
+        align: 'left',
+        minWidth: 180,
+        flex: 1,
+      },
+      {
+        field: "phone",
+        headerName: "Phone",
+        width: 150,
+        headerAlign: 'left',
+        align: 'left',
+        minWidth: 120,
+      },
       {
         field: "actions",
         type: "actions",
-        flex: 1,
-        align: "right",
+        headerName: "Actions",
+        width: 120,
+        headerAlign: 'center',
+        align: 'center',
+        sortable: false,
+        filterable: false,
         getActions: ({ row }) => [
           <GridActionsCellItem
             key="edit-item"
             icon={<EditIcon />}
-            label="Edit"
+            label="Edit Contact"
             onClick={handleRowEdit(row)}
           />,
           <GridActionsCellItem
             key="delete-item"
             icon={<DeleteIcon />}
-            label="Delete"
+            label="Delete Contact"
             onClick={handleRowDelete(row)}
           />,
         ],
@@ -476,9 +517,25 @@ export default function ContactList() {
             alignItems: 'center',
             height: 400,
             flexDirection: 'column',
-            gap: 2
+            gap: 3,
+            backgroundColor: '#fafbfc',
+            borderRadius: 3,
+            border: '1px dashed #e1e5e9',
           }}>
-            <div>Initializing...</div>
+            <Box sx={{
+              width: 48,
+              height: 48,
+              borderRadius: '50%',
+              backgroundColor: '#e3f2fd',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <RefreshIcon sx={{ color: '#1976d2', animation: 'spin 1s linear infinite' }} />
+            </Box>
+            <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 500 }}>
+              Initializing...
+            </Typography>
           </Box>
         ) : !isInitialized ? (
           <Box sx={{
@@ -487,9 +544,25 @@ export default function ContactList() {
             alignItems: 'center',
             height: 400,
             flexDirection: 'column',
-            gap: 2
+            gap: 3,
+            backgroundColor: '#fafbfc',
+            borderRadius: 3,
+            border: '1px dashed #e1e5e9',
           }}>
-            <div>Loading contacts...</div>
+            <Box sx={{
+              width: 48,
+              height: 48,
+              borderRadius: '50%',
+              backgroundColor: '#e3f2fd',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <RefreshIcon sx={{ color: '#1976d2', animation: 'spin 1s linear infinite' }} />
+            </Box>
+            <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 500 }}>
+              Loading contacts...
+            </Typography>
           </Box>
         ) : rowsState.rows.length === 0 ? (
           <Box sx={{
@@ -498,16 +571,40 @@ export default function ContactList() {
             alignItems: 'center',
             height: 400,
             flexDirection: 'column',
-            gap: 2
+            gap: 3,
+            backgroundColor: '#fafbfc',
+            borderRadius: 3,
+            border: '1px dashed #e1e5e9',
+            padding: 4,
           }}>
-            <div>
+            <Box sx={{
+              width: 64,
+              height: 64,
+              borderRadius: '50%',
+              backgroundColor: '#fff3e0',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <ContactsIcon sx={{ color: '#f57c00', fontSize: 32 }} />
+            </Box>
+            <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 500, textAlign: 'center' }}>
               {searchValue ? `No contacts found matching "${searchValue}"` : 'No contacts found'}
-            </div>
+            </Typography>
+            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', maxWidth: 400 }}>
+              {searchValue ? 'Try adjusting your search terms or clear the search to see all contacts.' : 'Get started by creating your first contact to manage your personal contacts efficiently.'}
+            </Typography>
             {searchValue ? (
               <Button
                 variant="outlined"
                 onClick={() => setSearchValue("")}
                 startIcon={<ClearIcon />}
+                sx={{
+                  borderRadius: 2,
+                  textTransform: 'none',
+                  px: 3,
+                  py: 1,
+                }}
               >
                 Clear search
               </Button>
@@ -516,6 +613,14 @@ export default function ContactList() {
                 variant="contained"
                 onClick={handleCreateClick}
                 startIcon={<AddIcon />}
+                sx={{
+                  borderRadius: 2,
+                  textTransform: 'none',
+                  px: 4,
+                  py: 1.5,
+                  fontSize: '1rem',
+                  fontWeight: 600,
+                }}
               >
                 Create your first contact
               </Button>
@@ -539,6 +644,7 @@ export default function ContactList() {
             )}
             <Suspense fallback={<div>Loading DataGrid...</div>}>
               <DataGrid
+                getRowId={(row) => row.id}
                 rows={rowsState.rows}
                 columns={columns}
                 pagination
@@ -549,7 +655,6 @@ export default function ContactList() {
                 loading={isLoading}
                 hideFooterSelectedRowCount
                 disableColumnMenu
-                getRowId={(row) => row.id}
                 initialState={{
                   pagination: {
                     paginationModel: { pageSize: INITIAL_PAGE_SIZE },
@@ -557,15 +662,87 @@ export default function ContactList() {
                 }}
                 pageSizeOptions={[5, INITIAL_PAGE_SIZE, 25]}
                 sx={{
-                  [`& .${gridClasses.columnHeader}, & .${gridClasses.cell}`]: {
-                    outline: "transparent",
+                  border: 'none',
+                  borderRadius: 3,
+                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
+                  backgroundColor: '#ffffff',
+                  '& .MuiDataGrid-main': {
+                    border: 'none',
                   },
-                  [`& .${gridClasses.columnHeader}:focus-within, & .${gridClasses.cell}:focus-within`]:
-                  {
-                    outline: "none",
+                  '& .MuiDataGrid-container--top [role=row]': {
+                    backgroundColor: '#f8f9fa',
                   },
-                  [`& .${gridClasses.row}:hover`]: {
-                    cursor: "pointer",
+                  [`& .${gridClasses.columnHeader}`]: {
+                    backgroundColor: '#f8f9fa',
+                    color: '#495057',
+                    fontWeight: 600,
+                    fontSize: '0.875rem',
+                    borderBottom: '2px solid #e9ecef',
+                    padding: '16px 12px',
+                    '&:focus': {
+                      outline: 'none',
+                    },
+                    '&:hover': {
+                      backgroundColor: '#e9ecef',
+                    },
+                  },
+                  [`& .${gridClasses.cell}`]: {
+                    borderBottom: '1px solid #f1f3f4',
+                    padding: '12px',
+                    fontSize: '0.875rem',
+                    color: '#212529',
+                    '&:focus': {
+                      outline: 'none',
+                    },
+                    '&:focus-within': {
+                      outline: 'none',
+                    },
+                  },
+                  [`& .${gridClasses.row}`]: {
+                    transition: 'all 0.2s ease-in-out',
+                    '&:hover': {
+                      backgroundColor: '#f8f9fa',
+                      cursor: 'pointer',
+                      transform: 'translateY(-1px)',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                    },
+                    '&:nth-of-type(even)': {
+                      backgroundColor: '#fafbfc',
+                      '&:hover': {
+                        backgroundColor: '#f1f3f4',
+                      },
+                    },
+                  },
+                  '& .MuiDataGrid-footerContainer': {
+                    backgroundColor: '#f8f9fa',
+                    borderTop: '2px solid #e9ecef',
+                    padding: '16px',
+                  },
+                  '& .MuiTablePagination-root': {
+                    color: '#6c757d',
+                    fontSize: '0.875rem',
+                  },
+                  '& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows': {
+                    fontSize: '0.875rem',
+                    fontWeight: 500,
+                  },
+                  '& .MuiIconButton-root': {
+                    color: '#6c757d',
+                    '&:hover': {
+                      backgroundColor: '#e9ecef',
+                      color: '#495057',
+                    },
+                  },
+                  '& .MuiDataGrid-actionsCell': {
+                    '& .MuiIconButton-root': {
+                      padding: '8px',
+                      margin: '0 2px',
+                      borderRadius: '6px',
+                      '&:hover': {
+                        backgroundColor: '#e3f2fd',
+                        color: '#1976d2',
+                      },
+                    },
                   },
                 }}
                 slotProps={{
@@ -574,7 +751,7 @@ export default function ContactList() {
                     noRowsVariant: "circular-progress",
                   },
                   baseIconButton: {
-                    size: "large",
+                    size: "medium",
                   },
                   pagination: {
                     labelRowsPerPage: "Rows per page:",

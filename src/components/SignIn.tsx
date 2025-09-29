@@ -110,15 +110,15 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
         };
 
         setUser(userData);
-        toast.success("Login successful");
-        router.push("/contacts");
+        toast.success("Login successful", { autoHideDuration: 3000 });
+        router.push("/");
       } else {
-        toast.error(result.message || result.error || "Login failed");
+        toast.error(result.message || result.error || "Login failed", { autoHideDuration: 3000 });
         return;
       }
     } catch (error) {
       console.error('Error sending data:', error);
-      toast.error("Network error. Please try again.");
+      toast.error("Network error. Please try again.", { autoHideDuration: 3000 });
 
     }
   };

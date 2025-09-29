@@ -79,11 +79,11 @@ export default function ContactCreateDialog({ open, onClose }: ContactCreateDial
         setLoading(true);
         try {
             await createOne(formData);
-            toast.success("Contact created successfully!");
+            toast.success("Contact created successfully!", { autoHideDuration: 3000 });
             onClose(true);
         } catch (error) {
 
-            toast.error(`Failed to create contact: ${(error as Error).message}`);
+            toast.error(`Failed to create contact: ${(error as Error).message}`, { autoHideDuration: 3000 });
         } finally {
             setLoading(false);
         }

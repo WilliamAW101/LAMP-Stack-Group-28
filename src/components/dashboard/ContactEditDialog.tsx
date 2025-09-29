@@ -67,7 +67,7 @@ export default function ContactEditDialog({ open, contactId, onClose }: ContactE
             });
             setErrors({});
         } catch (error) {
-            toast.error(`Failed to load contact: ${(error as Error).message}`);
+            toast.error(`Failed to load contact: ${(error as Error).message}`, { autoHideDuration: 3000 });
             onClose(false);
         } finally {
             setInitialLoading(false);
@@ -107,10 +107,10 @@ export default function ContactEditDialog({ open, contactId, onClose }: ContactE
         setLoading(true);
         try {
             await updateOne(contactId, formData);
-            toast.success("Contact updated successfully!");
+            toast.success("Contact updated successfully!", { autoHideDuration: 3000 });
             onClose(true);
         } catch (error) {
-            toast.error(`Failed to update contact: ${(error as Error).message}`);
+            toast.error(`Failed to update contact: ${(error as Error).message}`, { autoHideDuration: 3000 });
         } finally {
             setLoading(false);
         }

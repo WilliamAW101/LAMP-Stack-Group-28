@@ -174,9 +174,9 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       if (result.message === "Added user successfully") {
         // force user to login after signup
         router.push("/login");
-        toast.success("Create account successfully, please login");
+        toast.success("Create account successfully, please login", { autoHideDuration: 3000 });
       } else {
-        toast.error(result.message || result.error || "Signup failed");
+        toast.error(result.message || result.error || "Signup failed", { autoHideDuration: 3000 });
       }
 
     } catch (error) {

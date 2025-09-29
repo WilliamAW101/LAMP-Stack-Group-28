@@ -8,6 +8,7 @@ export interface ToastMessage {
     message: string
     severity: AlertColor
     key: number
+    autoHideDuration?: number
 }
 
 export const ToastContext = createContext<{
@@ -47,23 +48,23 @@ export const ToastProvider: FC<{ children: ReactNode } & ToastStyle> = ({
 export const useToast = () => {
     const { addMessage } = useContext(ToastContext)
 
-    const show = (message: string, options: { severity: AlertColor }) => {
+    const show = (message: string, options: { severity: AlertColor; autoHideDuration?: number } = { severity: "info" }) => {
         addMessage({ message, ...options, key: new Date().getTime() })
     }
 
     return {
         show,
-        info(message: string) {
-            show(message, { severity: "info" })
+        info(message: string, options?: { autoHideDuration?: number }) {
+            show(message, { severity: "info", ...options })
         },
-        success(message: string) {
-            show(message, { severity: "success" })
+        success(message: string, options?: { autoHideDuration?: number }) {
+            show(message, { severity: "success", ...options })
         },
-        warning(message: string) {
-            show(message, { severity: "warning" })
+        warning(message: string, options?: { autoHideDuration?: number }) {
+            show(message, { severity: "warning", ...options })
         },
-        error(message: string) {
-            show(message, { severity: "error" })
+        error(message: string, options?: { autoHideDuration?: number }) {
+            show(message, { severity: "error", ...options })
         },
     }
 }

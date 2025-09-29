@@ -7,10 +7,16 @@ import GitHubIcon from '@mui/icons-material/GitHub';
 import ContactsIcon from '@mui/icons-material/Contacts';
 import { useRouter } from 'next/navigation';
 import { useUser } from '@/context/user/UserContext';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
   const router = useRouter();
   const { user, getToken } = useUser();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleContactsClick = () => {
     const token = getToken();
@@ -65,7 +71,29 @@ export default function Home() {
             alignItems="center"
             sx={{ width: '100%' }}
           >
-            {user && getToken() && (
+            {!isClient ? (
+              // Show loading state during hydration
+              <Button
+                variant="contained"
+                size="large"
+                disabled
+                sx={{
+                  minWidth: { xs: '100%', sm: 200 },
+                  width: { xs: '100%', sm: 'auto' },
+                  py: { xs: 1.5, sm: 1.5 },
+                  fontSize: { xs: '1rem', sm: '1.1rem' },
+                  px: { xs: 3, sm: 2 },
+                  backgroundColor: 'rgba(255, 255, 255, 0.15)',
+                  color: '#ffffff',
+                  fontWeight: 600,
+                  border: '2px solid rgba(255, 255, 255, 0.4)',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                  backdropFilter: 'blur(10px)',
+                }}
+              >
+                Loading...
+              </Button>
+            ) : user && getToken() ? (
               <Button
                 variant="contained"
                 size="large"
@@ -95,8 +123,7 @@ export default function Home() {
               >
                 Contacts Dashboard
               </Button>
-            )}
-            {!user && !getToken() && (
+            ) : (
               <Button
                 variant="outlined"
                 size="large"
