@@ -177,7 +177,7 @@ export default function ContactList() {
           });
           setIsInitialized(true);
         }
-      } catch (listDataError: any) {
+      } catch (listDataError: unknown) {
 
         // Only show error if this is still the current request
         if (requestId === currentRequestId.current && isMounted.current) {
@@ -192,7 +192,7 @@ export default function ContactList() {
     };
 
     fetchData();
-  }, [sortModel, filterModel, refreshKey, searchValue]); // Added searchValue dependency
+  }, [sortModel, filterModel, refreshKey, searchValue, getToken, isClient]); // Added all dependencies
 
   /**
    * Effect: refresh data when component mounts (after navigation)
@@ -251,7 +251,7 @@ export default function ContactList() {
       // Use replace to avoid creating unnecessary history entries
       router.replace(newUrl);
     },
-    [router, searchParams, paginationModel, rowsState.rowCount]
+    [router, searchParams]
   );
 
 
@@ -282,7 +282,7 @@ export default function ContactList() {
               rowCount: listData.items.length, // Use actual items count
             });
           }
-        } catch (listDataError: any) {
+        } catch (listDataError: unknown) {
           // Only show error if this is still the current request
           if (requestId === currentRequestId.current && isMounted.current) {
             setError(listDataError as Error);
@@ -526,7 +526,7 @@ export default function ContactList() {
             {searchValue && (
               <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Typography variant="body2" color="text.secondary">
-                  Showing results for "{searchValue}"
+                  Showing results for &quot;{searchValue}&quot;
                 </Typography>
                 <Button
                   size="small"
