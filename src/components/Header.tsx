@@ -31,11 +31,9 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   }),
 }));
 
-interface AppAppBarProps {
-  variant?: 'homepage' | 'default';
-}
 
-export default function AppAppBar({ variant = 'homepage' }: AppAppBarProps = {}) {
+
+export default function AppAppBar() {
   const router = useRouter();
   const { logout, getToken } = useUser();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);

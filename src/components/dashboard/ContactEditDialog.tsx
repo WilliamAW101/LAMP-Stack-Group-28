@@ -9,7 +9,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import { getOne, updateOne, validate, type Contact } from "../../data/contacts";
+import { getOne, updateOne, validate } from "../../data/contacts";
 import { useToast } from "@/context/toast";
 
 export interface ContactEditDialogProps {

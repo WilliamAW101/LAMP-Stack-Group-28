@@ -15,7 +15,6 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import AppTheme from '../theme/AppTheme';
 import { useRouter } from 'next/navigation';
-import { useUser } from '@/context/user/UserContext';
 import { useToast } from '@/context/toast';
 
 const Card = styled(MuiCard)(({ theme }) => ({
