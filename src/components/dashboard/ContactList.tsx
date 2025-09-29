@@ -481,7 +481,7 @@ export default function ContactList() {
                 ),
               }}
               sx={{
-                minWidth: { xs: '100%', sm: 250 },
+                minWidth: { xs: '100%', sm: 350 },
                 width: { xs: '100%', sm: 'auto' },
                 '& .MuiOutlinedInput-root': {
                   backgroundColor: searchValue ? 'action.hover' : 'transparent',

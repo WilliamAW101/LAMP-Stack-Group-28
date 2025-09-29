@@ -8,6 +8,15 @@ export interface Contact {
     phone: string;
 }
 
+// API response interface
+interface ApiContact {
+    contact_id: number;
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: string;
+}
+
 // Helper function to get token from localStorage
 const getToken = (): string | null => {
     if (typeof window !== "undefined") {
@@ -70,11 +79,8 @@ export async function getMany({
 
         const result = await response.json();
 
-        // Debug: Log the API response to understand the structure
-        console.log('API Response:', result);
-
         // Handle different response formats
-        let rawContacts = [];
+        let rawContacts: ApiContact[] = [];
         let totalCount = 0;
 
         if (searchValue && searchValue.trim().length > 0) {
@@ -103,20 +109,13 @@ export async function getMany({
         }
 
         // Transform the API response to match our Contact interface
-        const contacts: Contact[] = rawContacts.map((contact: any, index: number) => {
-            const transformedContact = {
-                id: contact.id || contact.contact_id || (index + 1), // Use contact_id or fallback to index
-                first_name: contact.first_name || contact.firstName || '',
-                last_name: contact.last_name || contact.lastName || '',
-                email: contact.email || '',
-                phone: contact.phone || '',
-            };
-
-            // Debug: Log each transformed contact
-            console.log(`Transformed contact ${index}:`, transformedContact);
-
-            return transformedContact;
-        });
+        const contacts: Contact[] = rawContacts.map((contact: ApiContact, index: number) => ({
+            id: contact.contact_id || (index + 1),
+            first_name: contact.firstName || '',
+            last_name: contact.lastName || '',
+            email: contact.email || '',
+            phone: contact.phone || '',
+        }));
 
         const response_data = {
             items: contacts,
