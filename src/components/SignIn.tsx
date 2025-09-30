@@ -76,30 +76,12 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
   const baseUrl = getRuntimeApiUrl();
 
-  // Debug: Log baseURL value
-  React.useEffect(() => {
-    console.log('🔍 BaseURL Debug Info:');
-    console.log('BaseURL value:', baseUrl);
-    console.log('BaseURL type:', typeof baseUrl);
-    console.log('BaseURL is undefined:', baseUrl === undefined);
-    console.log('BaseURL is null:', baseUrl === null);
-    console.log('BaseURL length:', baseUrl?.length || 'N/A');
-    console.log('Full URL will be:', `${baseUrl}/Login.php`);
-    console.log('Environment:', process.env.NODE_ENV);
-    console.log('Window API URL:', typeof window !== 'undefined' ? (window as any).__API_URL__ : 'N/A');
-  }, [baseUrl]);
+
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (usernameError || passwordError) return;
-
-    // Safety check for baseURL
-    if (!baseUrl || baseUrl === 'undefined') {
-      console.error('❌ BaseURL is not configured properly!');
-      toast.error("Server configuration error. Please contact administrator.", { autoHideDuration: 5000 });
-      return;
-    }
 
     const data = new FormData(event.currentTarget);
 
