@@ -17,6 +17,7 @@ import AppTheme from '../theme/AppTheme';
 import { useUser } from '@/context/user/UserContext';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/context/toast';
+import { getRuntimeApiUrl } from '@/config/api';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -73,7 +74,7 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
   const toast = useToast();
   const { setUser } = useUser();
 
-  const baseUrl = process.env.REMOTE_URL;
+  const baseUrl = getRuntimeApiUrl();
 
   // Debug: Log baseURL value
   React.useEffect(() => {
@@ -84,12 +85,21 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     console.log('BaseURL is null:', baseUrl === null);
     console.log('BaseURL length:', baseUrl?.length || 'N/A');
     console.log('Full URL will be:', `${baseUrl}/Login.php`);
+    console.log('Environment:', process.env.NODE_ENV);
+    console.log('Window API URL:', typeof window !== 'undefined' ? (window as any).__API_URL__ : 'N/A');
   }, [baseUrl]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (usernameError || passwordError) return;
+
+    // Safety check for baseURL
+    if (!baseUrl || baseUrl === 'undefined') {
+      console.error('❌ BaseURL is not configured properly!');
+      toast.error("Server configuration error. Please contact administrator.", { autoHideDuration: 5000 });
+      return;
+    }
 
     const data = new FormData(event.currentTarget);
 

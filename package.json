@@ -7,7 +7,9 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "lint:fix": "eslint --fix"
+    "lint:fix": "eslint --fix",
+    "update-config": "node scripts/update-config.js",
+    "build:prod": "npm run update-config && npm run build"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
