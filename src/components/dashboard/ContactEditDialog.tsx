@@ -37,23 +37,7 @@ export default function ContactEditDialog({ open, contactId, onClose }: ContactE
     });
     const [errors, setErrors] = React.useState<Record<string, string>>({});
 
-    // Load contact data when dialog opens
-    React.useEffect(() => {
-        if (open && contactId) {
-            loadContactData();
-        } else {
-            // Reset form when dialog closes
-            setFormData({
-                first_name: "",
-                last_name: "",
-                email: "",
-                phone: "",
-            });
-            setErrors({});
-        }
-    }, [open, contactId]);
-
-    const loadContactData = async () => {
+    const loadContactData = React.useCallback(async () => {
         if (!contactId) return;
 
         setInitialLoading(true);
@@ -72,7 +56,23 @@ export default function ContactEditDialog({ open, contactId, onClose }: ContactE
         } finally {
             setInitialLoading(false);
         }
-    };
+    }, [contactId, toast, onClose]);
+
+    // Load contact data when dialog opens
+    React.useEffect(() => {
+        if (open && contactId) {
+            loadContactData();
+        } else {
+            // Reset form when dialog closes
+            setFormData({
+                first_name: "",
+                last_name: "",
+                email: "",
+                phone: "",
+            });
+            setErrors({});
+        }
+    }, [open, contactId, loadContactData]);
 
     const handleInputChange = (field: keyof ContactFormData) => (
         event: React.ChangeEvent<HTMLInputElement>

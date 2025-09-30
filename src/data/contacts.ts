@@ -28,8 +28,6 @@ const getToken = (): string | null => {
 // API functions for contacts
 export async function getMany({
     paginationModel,
-    filterModel,
-    sortModel,
     signal,
     searchValue,
 }: {
@@ -123,7 +121,7 @@ export async function getMany({
         };
 
         return response_data;
-    } catch (error) {
+    } catch {
         throw new Error("Failed to fetch contacts");
     }
 }
@@ -159,7 +157,7 @@ export async function getOne(contactId: number): Promise<Contact> {
         };
 
         return contact;
-    } catch (error) {
+    } catch {
         throw new Error('Failed to fetch contact');
     }
 }
@@ -277,7 +275,7 @@ export async function deleteOne(contactId: number): Promise<void> {
         if (result.error !== null && result.error !== "null") {
             throw new Error(result.error || 'Failed to delete contact');
         }
-    } catch (error) {
+    } catch {
         throw new Error('Failed to delete contact');
     }
 }
