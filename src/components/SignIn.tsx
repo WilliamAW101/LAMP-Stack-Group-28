@@ -75,12 +75,24 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
   const baseUrl = process.env.REMOTE_URL;
 
+  // Debug: Log baseURL value
+  React.useEffect(() => {
+    console.log('🔍 BaseURL Debug Info:');
+    console.log('BaseURL value:', baseUrl);
+    console.log('BaseURL type:', typeof baseUrl);
+    console.log('BaseURL is undefined:', baseUrl === undefined);
+    console.log('BaseURL is null:', baseUrl === null);
+    console.log('BaseURL length:', baseUrl?.length || 'N/A');
+    console.log('Full URL will be:', `${baseUrl}/Login.php`);
+  }, [baseUrl]);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (usernameError || passwordError) return;
 
     const data = new FormData(event.currentTarget);
+
 
     const jsonData = {
       login: data.get('username'),
@@ -154,7 +166,6 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
       <SignInContainer direction="column" justifyContent="space-between">
-        {/* <ColorModeSelect sx={{ position: 'fixed', top: '1rem', right: '1rem' }} /> */}
         <Card variant="outlined">
           <Typography
             component="h1"
