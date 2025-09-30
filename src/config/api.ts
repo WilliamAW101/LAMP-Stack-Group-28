@@ -20,7 +20,6 @@ export const getApiBaseUrl = (): string => {
 export const getRuntimeApiUrl = (): string => {
     // Always use the default URL for now to ensure it works
     const apiUrl = DEFAULT_API_URL;
-    console.log('🔧 Using API URL:', apiUrl);
     return apiUrl;
 };
 
