@@ -2,7 +2,7 @@
 // This file handles environment variables for both development and production
 
 // Default API URL - update this with your actual backend URL
-const DEFAULT_API_URL = 'https://cop4331-fraley.com/API';
+const DEFAULT_API_URL = 'http://cop4331-fraley.com/API';
 
 // Function to get the API base URL
 export const getApiBaseUrl = (): string => {

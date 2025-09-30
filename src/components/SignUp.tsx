@@ -16,6 +16,7 @@ import { styled } from '@mui/material/styles';
 import AppTheme from '../theme/AppTheme';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/context/toast';
+import { getRuntimeApiUrl } from '@/config/api';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -76,7 +77,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
   const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
 
-  const baseUrl = process.env.REMOTE_URL;
+  const baseUrl = getRuntimeApiUrl();
 
 
   const toast = useToast();
