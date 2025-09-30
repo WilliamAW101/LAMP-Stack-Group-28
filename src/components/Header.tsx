@@ -96,7 +96,18 @@ export default function AppAppBar() {
             {!isClient ? (
               // Show loading state during hydration
               <>
-                <Button color="primary" variant="text" size="small" disabled>
+                <Button
+                  color="primary"
+                  variant="text"
+                  size="small"
+                  disabled
+                  sx={{
+                    fontFamily: "var(--font-inter), 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif",
+                    fontSize: "0.8rem",
+                    fontWeight: 500,
+                    letterSpacing: "0.01em"
+                  }}
+                >
                   Loading...
                 </Button>
               </>
@@ -104,13 +115,18 @@ export default function AppAppBar() {
               <>
                 <IconButton
                   onClick={handleUserMenuClick}
-                  size="small"
+                  size="medium"
                   sx={{
                     ml: 2,
                     color: 'rgba(255, 255, 255, 0.9)',
+                    width: 44,
+                    height: 44,
                     '&:hover': {
                       backgroundColor: 'rgba(255, 255, 255, 0.15)',
                       color: '#ffffff',
+                    },
+                    '& .MuiSvgIcon-root': {
+                      fontSize: '2rem'
                     }
                   }}
                   aria-controls={Boolean(anchorEl) ? 'user-menu' : undefined}
@@ -175,17 +191,24 @@ export default function AppAppBar() {
                   size="small"
                   onClick={redirectLoginPage}
                   sx={{
-                    color: "rgba(255, 255, 255, 0.9)",
+                    backgroundColor: "#ffffff",
+                    color: "#2c3e50",
                     textTransform: "none",
-                    fontWeight: 500,
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                    px: { xs: 1.5, sm: 2.5 },
+                    fontWeight: 600,
+                    fontFamily: "var(--font-inter), 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif",
+                    fontSize: { xs: "0.85rem", sm: "0.95rem" },
+                    letterSpacing: "0.01em",
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+                    borderRadius: "8px",
+                    px: { xs: 2, sm: 3 },
                     minWidth: { xs: 'auto', sm: 'auto' },
-                    borderRadius: "6px",
+                    border: "1px solid rgba(255, 255, 255, 0.3)",
                     "&:hover": {
-                      backgroundColor: "rgba(255, 255, 255, 0.15)",
-                      color: "#ffffff",
-                      transform: "translateY(-1px)",
+                      backgroundColor: "#f8f9fa",
+                      color: "#1a252f",
+                      boxShadow: "0 6px 16px rgba(0, 0, 0, 0.25)",
+                      transform: "translateY(-2px)",
+                      border: "1px solid rgba(255, 255, 255, 0.5)",
                     },
                     transition: "all 0.3s ease"
                   }}
@@ -198,20 +221,24 @@ export default function AppAppBar() {
                   size="small"
                   onClick={redirectSignupPage}
                   sx={{
-                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    backgroundColor: "#ffffff",
                     color: "#2c3e50",
                     textTransform: "none",
                     fontWeight: 600,
-                    fontSize: { xs: "0.75rem", sm: "0.875rem" },
-                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
-                    borderRadius: "6px",
+                    fontFamily: "var(--font-inter), 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif",
+                    fontSize: { xs: "0.85rem", sm: "0.95rem" },
+                    letterSpacing: "0.01em",
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+                    borderRadius: "8px",
                     px: { xs: 2, sm: 3 },
                     minWidth: { xs: 'auto', sm: 'auto' },
+                    border: "1px solid rgba(255, 255, 255, 0.3)",
                     "&:hover": {
-                      backgroundColor: "#ffffff",
+                      backgroundColor: "#f8f9fa",
                       color: "#1a252f",
-                      boxShadow: "0 6px 16px rgba(0, 0, 0, 0.2)",
+                      boxShadow: "0 6px 16px rgba(0, 0, 0, 0.25)",
                       transform: "translateY(-2px)",
+                      border: "1px solid rgba(255, 255, 255, 0.5)",
                     },
                     transition: "all 0.3s ease"
                   }}

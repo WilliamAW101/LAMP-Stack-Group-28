@@ -1,17 +1,13 @@
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { UserProvider } from "@/context/user/UserContext";
 import DialogsProvider from "@/hooks/useDialogs/DialogsProvider";
 import { ToastProvider } from "@/context/toast";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  display: "swap",
 });
 
 
@@ -23,7 +19,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={inter.variable}>
         <ToastProvider>
           <DialogsProvider>
             <UserProvider>
