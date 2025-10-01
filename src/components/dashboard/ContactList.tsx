@@ -16,7 +16,6 @@ import {
   GridFilterModel,
   GridPaginationModel,
   GridSortModel,
-  GridEventListener,
   gridClasses,
 } from "@mui/x-data-grid";
 import AddIcon from "@mui/icons-material/Add";
@@ -359,6 +358,10 @@ export default function ContactList() {
         headerAlign: 'center',
         align: 'center',
         sortable: false,
+        valueGetter: (value, row) => {
+          const rowIndex = rowsState.rows.findIndex(r => r.id === row.id);
+          return rowIndex !== -1 ? paginationModel.page * paginationModel.pageSize + rowIndex + 1 : '';
+        },
       },
       {
         field: "first_name",
@@ -436,7 +439,7 @@ export default function ContactList() {
         ],
       },
     ],
-    [handleRowEdit, handleRowDelete]
+    [handleRowEdit, handleRowDelete, rowsState.rows, paginationModel]
   );
 
   const pageTitle = "Contacts";
