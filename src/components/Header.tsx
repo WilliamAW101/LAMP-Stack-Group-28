@@ -128,6 +128,7 @@ export default function AppAppBar() {
                       fontSize: '2rem'
                     }
                   }}
+                  aria-label="User account menu"
                   aria-controls={Boolean(anchorEl) ? 'user-menu' : undefined}
                   aria-haspopup="true"
                   aria-expanded={Boolean(anchorEl) ? 'true' : undefined}

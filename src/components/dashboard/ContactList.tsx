@@ -300,13 +300,6 @@ export default function ContactList() {
     }
   }, [isLoading, sortModel, filterModel, searchValue]);
 
-  const handleRowClick = React.useCallback<GridEventListener<"rowClick">>(
-    ({ row }) => {
-      router.push(`/contacts/${row.id}`);
-    },
-    [router]
-  );
-
   const handleCreateClick = React.useCallback(() => {
     setCreateDialogOpen(true);
   }, []);
@@ -692,7 +685,6 @@ export default function ContactList() {
                 paginationModel={paginationModel}
                 onPaginationModelChange={handlePaginationModelChange}
                 disableRowSelectionOnClick
-                onRowClick={handleRowClick}
                 loading={isLoading}
                 hideFooterSelectedRowCount
                 disableColumnMenu
