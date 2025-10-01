@@ -3,6 +3,8 @@
 
 // Default API URL - update this with your actual backend URL
 const DEFAULT_API_URL = 'https://cop4331-fraley.com/API';
+// const DEFAULT_API_URL = 'http://localhost:8000';
+
 
 // Function to get the API base URL
 export const getApiBaseUrl = (): string => {

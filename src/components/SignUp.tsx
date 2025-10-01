@@ -16,6 +16,7 @@ import { styled } from '@mui/material/styles';
 import AppTheme from '../theme/AppTheme';
 import { useRouter } from 'next/navigation';
 import { useToast } from '@/context/toast';
+import { getRuntimeApiUrl } from '@/config/api';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -65,8 +66,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function SignUp(props: { disableCustomTheme?: boolean }) {
-  const [emailError, setEmailError] = React.useState(false);
-  const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
+
   const [usernameError, setUsernameError] = React.useState(false);
   const [usernameErrorMessage, setUsernameErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
@@ -76,7 +76,9 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
   const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
 
-  const baseUrl = process.env.REMOTE_URL;
+
+  const baseUrl = getRuntimeApiUrl();
+  // const baseUrl = process.env.REMOTE_URL;
 
 
   const toast = useToast();
@@ -84,7 +86,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
 
 
   const validateInputs = () => {
-    const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
     const firstname = document.getElementById('firstname') as HTMLInputElement;
     const lastname = document.getElementById('lastname') as HTMLInputElement;
@@ -102,14 +103,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       setUsernameErrorMessage('');
     }
 
-    if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
-      setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
-      isValid = false;
-    } else {
-      setEmailError(false);
-      setEmailErrorMessage('');
-    }
+
 
     if (!password.value || password.value.length < 6) {
       setPasswordError(true);
@@ -144,7 +138,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault(); // prevent default form submission
 
-    if (firstnameError || lastnameError || emailError || passwordError) {
+    if (firstnameError || lastnameError || passwordError) {
       return;
     }
 
@@ -156,8 +150,6 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
       password: data.get('password'),
       first_name: data.get('firstname'),
       last_name: data.get('lastname'),
-      email: data.get('email'),
-      phone: data.get('phone'),
     };
 
     try {
@@ -236,33 +228,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
                 color={lastnameError ? 'error' : 'primary'}
               />
             </FormControl>
-            <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <TextField
-                required
-                fullWidth
-                id="email"
-                placeholder="your@email.com"
-                name="email"
-                autoComplete="email"
-                variant="outlined"
-                error={emailError}
-                helperText={emailErrorMessage}
-                color={passwordError ? 'error' : 'primary'}
-              />
-            </FormControl>
-            <FormControl>
-              <FormLabel htmlFor="phone">Phone</FormLabel>
-              <TextField
-                required
-                fullWidth
-                id="phone"
-                placeholder="1234567890"
-                name="phone"
-                autoComplete="phone"
-                variant="outlined"
-              />
-            </FormControl>
+
             <FormControl>
               <FormLabel htmlFor="user name">Username</FormLabel>
               <TextField

@@ -118,12 +118,11 @@ export default function AppAppBar() {
                   size="medium"
                   sx={{
                     ml: 2,
-                    color: 'rgba(255, 255, 255, 0.9)',
+                    color: 'rgba(70, 90, 110, 0.9)',
                     width: 44,
                     height: 44,
                     '&:hover': {
                       backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                      color: '#ffffff',
                     },
                     '& .MuiSvgIcon-root': {
                       fontSize: '2rem'
@@ -172,7 +171,13 @@ export default function AppAppBar() {
                 >
                   <MenuItem onClick={() => { handleUserMenuClose(); router.push('/contacts'); }}>
                     <ListItemIcon>
-                      <PersonIcon fontSize="small" />
+                      <PersonIcon fontSize="medium"
+                        sx={{
+                          fontSize: '1.5rem',
+                          borderRadius: '50%',
+                          padding: '4px',
+                          backgroundColor: 'rgba(96, 125, 139, 0.9)',
+                        }} />
                     </ListItemIcon>
                     <ListItemText>Dashboard</ListItemText>
                   </MenuItem>

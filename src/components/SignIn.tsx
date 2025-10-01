@@ -100,24 +100,26 @@ export default function SignIn(props: { disableCustomTheme?: boolean }) {
 
       const result = await response.json();
 
-      if (result.data && result.data.token) {
+      // Check if token exists and is not null or "null" string
+      if (result.data && result.data.token && result.data.token !== "null" && result.data.token !== null) {
         const token = result.data.token;
         localStorage.setItem('token', token);
 
-        // Extract user data from the response
+        // Extract user data from the API response
         const userData = {
           token: token,
           username: jsonData.login as string,
           first_name: result.data.first_name || result.first_name || '',
           last_name: result.data.last_name || result.last_name || '',
-          email: result.data.email || '',
         };
 
         setUser(userData);
         toast.success("Login successful", { autoHideDuration: 3000 });
         router.push("/");
       } else {
-        toast.error(result.message || result.error || "Login failed", { autoHideDuration: 3000 });
+        // Handle null token case - display error from response
+        const errorMessage = result.error
+        toast.error(errorMessage, { autoHideDuration: 3000 });
         return;
       }
     } catch (error) {

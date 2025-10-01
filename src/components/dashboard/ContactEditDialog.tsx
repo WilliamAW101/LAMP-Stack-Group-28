@@ -37,32 +37,30 @@ export default function ContactEditDialog({ open, contactId, onClose }: ContactE
     });
     const [errors, setErrors] = React.useState<Record<string, string>>({});
 
-    const loadContactData = React.useCallback(async () => {
-        if (!contactId) return;
-
-        setInitialLoading(true);
-        try {
-            const contact = await getOne(contactId);
-            setFormData({
-                first_name: contact.first_name,
-                last_name: contact.last_name,
-                email: contact.email,
-                phone: contact.phone,
-            });
-            setErrors({});
-        } catch (error) {
-            toast.error(`Failed to load contact: ${(error as Error).message}`, { autoHideDuration: 3000 });
-            onClose(false);
-        } finally {
-            setInitialLoading(false);
-        }
-    }, [contactId, toast, onClose]);
-
     // Load contact data when dialog opens
     React.useEffect(() => {
         if (open && contactId) {
+            const loadContactData = async () => {
+                setInitialLoading(true);
+                try {
+                    const contact = await getOne(contactId);
+                    setFormData({
+                        first_name: contact.first_name,
+                        last_name: contact.last_name,
+                        email: contact.email,
+                        phone: contact.phone,
+                    });
+                    setErrors({});
+                } catch (error) {
+                    toast.error(`Failed to load contact: ${(error as Error).message}`, { autoHideDuration: 3000 });
+                    onClose(false);
+                } finally {
+                    setInitialLoading(false);
+                }
+            };
+
             loadContactData();
-        } else {
+        } else if (!open) {
             // Reset form when dialog closes
             setFormData({
                 first_name: "",
@@ -72,7 +70,8 @@ export default function ContactEditDialog({ open, contactId, onClose }: ContactE
             });
             setErrors({});
         }
-    }, [open, contactId, loadContactData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open, contactId]);
 
     const handleInputChange = (field: keyof ContactFormData) => (
         event: React.ChangeEvent<HTMLInputElement>

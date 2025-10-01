@@ -412,15 +412,33 @@ export default function ContactList() {
         getActions: ({ row }) => [
           <GridActionsCellItem
             key="edit-item"
-            icon={<EditIcon />}
+            icon={
+              <EditIcon
+                sx={{
+                  fontSize: '1.25rem',
+                  color: '#1976d2',
+                  transition: 'all 0.2s ease-in-out',
+                }}
+              />
+            }
             label="Edit Contact"
             onClick={handleRowEdit(row)}
+            showInMenu={false}
           />,
           <GridActionsCellItem
             key="delete-item"
-            icon={<DeleteIcon />}
+            icon={
+              <DeleteIcon
+                sx={{
+                  fontSize: '1.25rem',
+                  color: '#d32f2f',
+                  transition: 'all 0.2s ease-in-out',
+                }}
+              />
+            }
             label="Delete Contact"
             onClick={handleRowDelete(row)}
+            showInMenu={false}
           />,
         ],
       },
@@ -588,22 +606,44 @@ export default function ContactList() {
             }}>
               <ContactsIcon sx={{ color: '#f57c00', fontSize: 32 }} />
             </Box>
-            <Typography variant="h6" color="text.secondary" sx={{ fontWeight: 500, textAlign: 'center' }}>
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              sx={{
+                fontWeight: 600,
+                textAlign: 'center',
+                fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+                letterSpacing: '-0.01em',
+              }}
+            >
               {searchValue ? `No contacts found matching "${searchValue}"` : 'No contacts found'}
             </Typography>
-            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', maxWidth: 400 }}>
+            <Typography
+              variant="body1"
+              color="text.secondary"
+              sx={{
+                textAlign: 'center',
+                maxWidth: 450,
+                fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+                fontSize: '1rem',
+                lineHeight: 1.6,
+                fontWeight: 400,
+              }}
+            >
               {searchValue ? 'Try adjusting your search terms or clear the search to see all contacts.' : 'Get started by creating your first contact to manage your personal contacts efficiently.'}
             </Typography>
             {searchValue ? (
               <Button
                 variant="outlined"
                 onClick={() => setSearchValue("")}
-                startIcon={<ClearIcon />}
+                startIcon={<ClearIcon sx={{ fontSize: '1.125rem' }} />}
                 sx={{
                   borderRadius: 2,
                   textTransform: 'none',
-                  px: 3,
+                  px: 2,
                   py: 1,
+                  fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+                  fontWeight: 500,
                 }}
               >
                 Clear search
@@ -612,14 +652,15 @@ export default function ContactList() {
               <Button
                 variant="contained"
                 onClick={handleCreateClick}
-                startIcon={<AddIcon />}
+                startIcon={<AddIcon sx={{ fontSize: '1rem' }} />}
                 sx={{
                   borderRadius: 2,
                   textTransform: 'none',
-                  px: 4,
+                  px: 3,
                   py: 1.5,
                   fontSize: '1rem',
                   fontWeight: 600,
+                  fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
                 }}
               >
                 Create your first contact
@@ -734,13 +775,30 @@ export default function ContactList() {
                     },
                   },
                   '& .MuiDataGrid-actionsCell': {
+                    gap: '4px',
                     '& .MuiIconButton-root': {
                       padding: '8px',
-                      margin: '0 2px',
-                      borderRadius: '6px',
+                      margin: '0 4px',
+                      borderRadius: '8px',
+                      border: '1px solid transparent',
+                      transition: 'all 0.2s ease-in-out',
                       '&:hover': {
-                        backgroundColor: '#e3f2fd',
-                        color: '#1976d2',
+                        transform: 'scale(1.1)',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                      },
+                      // Edit button (first button - blue)
+                      '&:first-of-type': {
+                        '&:hover': {
+                          backgroundColor: '#e3f2fd',
+                          borderColor: '#1976d2',
+                        },
+                      },
+                      // Delete button (last button - red)
+                      '&:last-of-type': {
+                        '&:hover': {
+                          backgroundColor: '#ffebee',
+                          borderColor: '#d32f2f',
+                        },
                       },
                     },
                   },
