@@ -76,9 +76,7 @@ export default function SignUp(props: { disableCustomTheme?: boolean }) {
   const [firstNameErrorMessage, setFirstNameErrorMessage] = React.useState('');
   const [lastNameErrorMessage, setLastNameErrorMessage] = React.useState('');
 
-
   const baseUrl = getRuntimeApiUrl();
-  // const baseUrl = process.env.REMOTE_URL;
 
 
   const toast = useToast();

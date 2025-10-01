@@ -49,9 +49,7 @@ export async function getMany({
         pageSize: String(pageSize),
     });
 
-    // const baseUrl = process.env.REMOTE_URL;
     const baseUrl = getRuntimeApiUrl();
-
     // Add search parameter if provided and not empty
     if (searchValue && searchValue.trim().length > 0) {
         params.set("search", searchValue.trim());
@@ -134,8 +132,6 @@ export async function getOne(contactId: number): Promise<Contact> {
     const token = localStorage.getItem('token');
     const baseUrl = getRuntimeApiUrl();
 
-    // const baseUrl = process.env.REMOTE_URL;
-
     try {
         const response = await fetch(`${baseUrl}/getOneContact.php?contact_id=${contactId}`, {
             method: 'GET',
@@ -169,9 +165,8 @@ export async function getOne(contactId: number): Promise<Contact> {
 
 export async function createOne(data: Omit<Contact, 'id'>): Promise<Contact> {
     const token = localStorage.getItem('token');
-    const baseUrl = getRuntimeApiUrl();
 
-    // const baseUrl = process.env.REMOTE_URL;
+    const baseUrl = getRuntimeApiUrl();
 
 
     try {
@@ -213,9 +208,8 @@ export async function createOne(data: Omit<Contact, 'id'>): Promise<Contact> {
 
 export async function updateOne(contactId: number, data: Partial<Omit<Contact, 'id'>>): Promise<Contact> {
     const token = localStorage.getItem('token');
-    const baseUrl = getRuntimeApiUrl();
 
-    // const baseUrl = process.env.REMOTE_URL;
+    const baseUrl = getRuntimeApiUrl();
     const jsonData = {
         contact_id: contactId,
         ...data,
@@ -261,8 +255,6 @@ export async function updateOne(contactId: number, data: Partial<Omit<Contact, '
 export async function deleteOne(contactId: number): Promise<void> {
     const token = localStorage.getItem('token');
     const baseUrl = getRuntimeApiUrl();
-
-    // const baseUrl = process.env.REMOTE_URL;
     const jsonData = {
         contact_id: contactId,
     };
