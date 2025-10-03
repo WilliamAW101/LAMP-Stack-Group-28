@@ -47,10 +47,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <Box sx={{
             display: 'flex',
             minHeight: '100vh',
-            background: '#ffffff',
-            ...theme.applyStyles('dark', {
-                background: '#f5f5f5',
-            }),
+            background: 'linear-gradient(135deg, #4a90e2 0%, #7bb3f0 50%, #a8d0f0 100%)',
         }}>
             <CssBaseline />
             <Header />

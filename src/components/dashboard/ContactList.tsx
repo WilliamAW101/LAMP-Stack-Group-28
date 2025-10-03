@@ -498,18 +498,57 @@ export default function ContactList() {
                 minWidth: { xs: '100%', sm: 350 },
                 width: { xs: '100%', sm: 'auto' },
                 '& .MuiOutlinedInput-root': {
-                  backgroundColor: searchValue ? 'action.hover' : 'transparent',
-                }
+                  backgroundColor: '#ffffff',
+                  color: '#0f172a',
+                  '& fieldset': {
+                    borderColor: 'rgba(74, 144, 226, 0.35)',
+                    borderWidth: 1,
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#4a90e2',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#4a90e2',
+                    boxShadow: '0 0 0 3px rgba(74, 144, 226, 0.15)',
+                  },
+                },
+                '& .MuiInputAdornment-root .MuiSvgIcon-root': {
+                  color: '#2c5282',
+                },
+                '& .MuiInputBase-input::placeholder': {
+                  color: '#64748b',
+                  opacity: 1,
+                },
               }}
             />
           </Stack>
           <Button
             variant="contained"
             onClick={handleCreateClick}
-            startIcon={<AddIcon />}
+            startIcon={<AddIcon sx={{ color: '#1a1a1a', fontSize: '1.1rem' }} />}
             sx={{
               width: { xs: '100%', sm: 'auto' },
-              minWidth: { xs: 'auto', sm: 'auto' }
+              minWidth: { xs: 'auto', sm: 'auto' },
+              backgroundColor: '#ffd700',
+              color: '#1a1a1a',
+              fontWeight: 600,
+              fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+              letterSpacing: '-0.01em',
+              borderRadius: 1.5,
+              textTransform: 'none',
+              px: 2,
+              py: 1,
+              fontSize: '0.875rem',
+              boxShadow: '0 2px 8px rgba(255, 215, 0, 0.3)',
+              '&:hover': {
+                backgroundColor: '#ffed4e',
+                boxShadow: '0 4px 12px rgba(255, 215, 0, 0.4)',
+                transform: 'translateY(-1px)',
+              },
+              '&:active': {
+                transform: 'translateY(0)',
+                boxShadow: '0 2px 6px rgba(255, 215, 0, 0.3)',
+              }
             }}
           >
             <Box sx={{ display: { xs: 'none', sm: 'inline' } }}>Create</Box>
@@ -700,33 +739,34 @@ export default function ContactList() {
                 sx={{
                   border: 'none',
                   borderRadius: 3,
-                  boxShadow: '0 4px 20px rgba(0, 0, 0, 0.08)',
-                  backgroundColor: '#ffffff',
+                  boxShadow: '0 8px 32px rgba(74, 144, 226, 0.15)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                  backdropFilter: 'blur(10px)',
                   '& .MuiDataGrid-main': {
                     border: 'none',
                   },
                   '& .MuiDataGrid-container--top [role=row]': {
-                    backgroundColor: '#f8f9fa',
+                    backgroundColor: 'rgba(74, 144, 226, 0.08)',
                   },
                   [`& .${gridClasses.columnHeader}`]: {
-                    backgroundColor: '#f8f9fa',
-                    color: '#495057',
-                    fontWeight: 600,
+                    backgroundColor: 'rgba(74, 144, 226, 0.12)',
+                    color: '#2c5282',
+                    fontWeight: 700,
                     fontSize: '0.875rem',
-                    borderBottom: '2px solid #e9ecef',
+                    borderBottom: '2px solid rgba(74, 144, 226, 0.2)',
                     padding: '16px 12px',
                     '&:focus': {
                       outline: 'none',
                     },
                     '&:hover': {
-                      backgroundColor: '#e9ecef',
+                      backgroundColor: 'rgba(74, 144, 226, 0.18)',
                     },
                   },
                   [`& .${gridClasses.cell}`]: {
-                    borderBottom: '1px solid #f1f3f4',
+                    borderBottom: '1px solid rgba(74, 144, 226, 0.1)',
                     padding: '12px',
                     fontSize: '0.875rem',
-                    color: '#212529',
+                    color: '#1a365d',
                     '&:focus': {
                       outline: 'none',
                     },
@@ -737,36 +777,37 @@ export default function ContactList() {
                   [`& .${gridClasses.row}`]: {
                     transition: 'all 0.2s ease-in-out',
                     '&:hover': {
-                      backgroundColor: '#f8f9fa',
+                      backgroundColor: 'rgba(74, 144, 226, 0.08)',
                       cursor: 'pointer',
                       transform: 'translateY(-1px)',
-                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)',
+                      boxShadow: '0 4px 16px rgba(74, 144, 226, 0.2)',
                     },
                     '&:nth-of-type(even)': {
-                      backgroundColor: '#fafbfc',
+                      backgroundColor: 'rgba(74, 144, 226, 0.03)',
                       '&:hover': {
-                        backgroundColor: '#f1f3f4',
+                        backgroundColor: 'rgba(74, 144, 226, 0.12)',
                       },
                     },
                   },
                   '& .MuiDataGrid-footerContainer': {
-                    backgroundColor: '#f8f9fa',
-                    borderTop: '2px solid #e9ecef',
+                    backgroundColor: 'rgba(74, 144, 226, 0.08)',
+                    borderTop: '2px solid rgba(74, 144, 226, 0.2)',
                     padding: '16px',
                   },
                   '& .MuiTablePagination-root': {
-                    color: '#6c757d',
+                    color: '#2c5282',
                     fontSize: '0.875rem',
                   },
                   '& .MuiTablePagination-selectLabel, & .MuiTablePagination-displayedRows': {
                     fontSize: '0.875rem',
-                    fontWeight: 500,
+                    fontWeight: 600,
+                    color: '#2c5282',
                   },
                   '& .MuiIconButton-root': {
-                    color: '#6c757d',
+                    color: '#4a90e2',
                     '&:hover': {
-                      backgroundColor: '#e9ecef',
-                      color: '#495057',
+                      backgroundColor: 'rgba(74, 144, 226, 0.1)',
+                      color: '#2c5282',
                     },
                   },
                   '& .MuiDataGrid-actionsCell': {
@@ -779,20 +820,20 @@ export default function ContactList() {
                       transition: 'all 0.2s ease-in-out',
                       '&:hover': {
                         transform: 'scale(1.1)',
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)',
+                        boxShadow: '0 2px 8px rgba(74, 144, 226, 0.3)',
                       },
-                      // Edit button (first button - blue)
+                      // Edit button (first button - blue theme)
                       '&:first-of-type': {
                         '&:hover': {
-                          backgroundColor: '#e3f2fd',
-                          borderColor: '#1976d2',
+                          backgroundColor: 'rgba(74, 144, 226, 0.15)',
+                          borderColor: '#4a90e2',
                         },
                       },
-                      // Delete button (last button - red)
+                      // Delete button (last button - red theme)
                       '&:last-of-type': {
                         '&:hover': {
-                          backgroundColor: '#ffebee',
-                          borderColor: '#d32f2f',
+                          backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                          borderColor: '#dc2626',
                         },
                       },
                     },

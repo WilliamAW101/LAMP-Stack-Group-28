@@ -58,10 +58,7 @@ const SignUpContainer = styled(Stack)(({ theme }) => ({
     position: 'absolute',
     zIndex: -1,
     inset: 0,
-    background: '#ffffff',
-    ...theme.applyStyles('dark', {
-      background: '#f5f5f5',
-    }),
+    background: 'linear-gradient(135deg, #4a90e2 0%, #7bb3f0 50%, #a8d0f0 100%)',
   },
 }));
 
